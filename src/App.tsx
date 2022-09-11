@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useContext } from "react";
+import { AuthContext } from "./context/auth-context";
 
-function App() {
+import { Nav } from "./components/LoggedInView/Navbar/Nav";
+import { Route, Routes } from "react-router-dom";
+
+import { LoggedInView } from "./components/LoggedInView/LoggedInView";
+import { WelcomePage } from "./components/LoggedOutView/WelcomePage/WelcomePage";
+import { AuthForm } from "./components/LoggedOutView/AuthForm/AuthForm";
+
+export function App() {
+  const { isAuth } = useContext(AuthContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      {isAuth && <Nav />}
+      <Route path={"/"} element={<WelcomePage />} />
+      <Route path={"/login"} element={<AuthForm isRegistering={false} />} />
+      <Route path={"/register"} element={<AuthForm isRegistering={true} />} />
+      {isAuth && <Route path={"/chat"} element={<LoggedInView />} />}
+    </Routes>
   );
 }
-
-export default App;
