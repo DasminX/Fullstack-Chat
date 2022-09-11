@@ -1,6 +1,6 @@
 import React, { FC, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../context/auth-context";
+import { AuthContext } from "../../context/auth-context";
 import { AuthFormInput } from "./AuthFormInput";
 
 export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
@@ -17,10 +17,10 @@ export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
   };
 
   return (
-    <main className="relative h-screen w-full flex justify-center items-center bg-slate-800">
+    <main className="relative h-screen w-full flex justify-center items-center bg-slate-900 text-white">
       <form
         onSubmit={formActionHandler}
-        className="bg-transparent/25 h-2/3 w-1/3 rounded-xl shadow-indigo-400 shadow-2xl border-solid border-indigo-300 border-2 font-semibold leading-8 p-10 flex flex-col justify-around text-center"
+        className="bg-transparent/25 h-2/3 w-1/3 rounded-xl shadow-cyan-400 shadow-2xl border-solid border-indigo-300 border-2 font-semibold leading-8 p-10 flex flex-col justify-around text-center"
       >
         <h1 className="text-3xl py-6">
           {isRegistering ? "Register" : "Sign in to join chat lobby!"}
@@ -32,7 +32,7 @@ export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
         )}
         <div className="w-full my-14">
           <button
-            className="bg-slate-600 px-8 py-2 rounded-lg w-1/3 hover:scale-110 hover:bg-slate-500 transition duration-150"
+            className="bg-slate-700 px-8 py-2 rounded-lg w-1/3 hover:scale-110 hover:bg-cyan-700 transition duration-150"
             type="submit"
           >
             {isRegistering ? "Register" : "Login"}
@@ -44,7 +44,7 @@ export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
             : "Not having an account yet? Click "}
           <NavLink
             to={`${isRegistering ? "/login" : "/register"}`}
-            className="text-indigo-400 hover:text-indigo-300"
+            className="text-cyan-700 hover:text-cyan-400"
           >
             HERE
           </NavLink>

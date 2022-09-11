@@ -1,3 +1,4 @@
+import { ChangeEvent, useState } from "react";
 import { RoomPreview } from "./RoomPreview/RoomPreview";
 
 type RoomsDataType = {
@@ -36,6 +37,16 @@ const roomsData: Array<RoomsDataType> = [
 ];
 
 export const RoomsPanel = () => {
+  const [searchInputValue, setSearchInputValue] = useState("");
+
+  const filterRoomsHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchInputValue(e.currentTarget.value);
+  };
+
+  const filteredRoomData = roomsData.filter((room) =>
+    room.name.toLowerCase().includes(searchInputValue.toLowerCase())
+  );
+
   return (
     <section
       className="col-start-1 col-end-4 min-w-320 bg-white px-2 py-1 row-span-full"
@@ -44,20 +55,30 @@ export const RoomsPanel = () => {
         maxWidth: "440px",
       }}
     >
-      <div className="w-full h-8 text-black flex justify-end mt-2 mb-4">
+      <div className="w-4/5 h-8 ml-auto text-black flex mt-2 mb-4 justify-around">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          className="basis-3/4 py-1 px-2 border-black border-2 rounded-md"
+          onChange={filterRoomsHandler}
+        />
         <button className="rounded-lg border-2 border-slate-300 p-1 self-center text-lg font-extrabold hover:bg-slate-300 hover:text-white">
           +
         </button>
       </div>
-      {roomsData.map((room) => (
-        <RoomPreview
-          key={room.id}
-          name={room.name}
-          imgUrl={room.imgUrl}
-          userInRoom={room.userInRoom}
-          activeInRoom={room.activeInRoom}
-        />
-      ))}
+      {filteredRoomData.length > 0 &&
+        filteredRoomData.map((room) => (
+          <RoomPreview
+            key={room.id}
+            name={room.name}
+            imgUrl={room.imgUrl}
+            userInRoom={room.userInRoom}
+            activeInRoom={room.activeInRoom}
+          />
+        ))}
+      {filteredRoomData.length === 0 && (
+        <p className="text-center text-black mt-16">No rooms found.</p>
+      )}
     </section>
   );
 };
