@@ -21,9 +21,6 @@ export const Nav = () => {
         <NavLink to={"/profile"} className={navLinkStyle}>
           Profile
         </NavLink>
-        <NavLink to={"/settings"} className={navLinkStyle}>
-          Settings
-        </NavLink>
         <NavLink
           to={"/login"}
           className={navLinkStyle}

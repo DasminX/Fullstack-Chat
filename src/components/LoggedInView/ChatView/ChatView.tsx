@@ -5,7 +5,7 @@ export const ChatView = () => {
         <h1 className="text-xl font-mono basis-5/6 text-center">
           Wariaci React
         </h1>
-        <button className="font-extrabold text-2xl hover:text-red-400">
+        <button className="font-extrabold text-2xl hover:text-red-4 bnv00">
           X
         </button>
       </div>
