@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useState } from "react";
+import { avatars } from "../utils/avatars";
 
 // Types
 type AuthContextType = {
@@ -22,12 +23,11 @@ export const AuthContext = React.createContext<AuthContextType>({
   setChangeLogo: (imageUrl) => {},
 });
 
+// Provider
 export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [userLogo, setUserLogo] = useState<string>(
-    "https://media.istockphoto.com/vectors/letter-e-vector-design-template-vector-id1181190850"
-  );
+  const [userLogo, setUserLogo] = useState<string>(avatars[0].avatarUrl);
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("John Doe");
 

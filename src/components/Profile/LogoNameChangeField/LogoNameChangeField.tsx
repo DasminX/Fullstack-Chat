@@ -17,6 +17,7 @@ export const LogoNameChangeField: FC<{
     ) {
       return setErrorHandler();
     }
+    authCtx.setChangeUsername(inputNameRef.current!.value);
     setIsChangingName(false);
   };
 

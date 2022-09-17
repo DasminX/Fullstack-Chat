@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Nav } from "../components/LoggedInView/Nav/Nav";
 import { ErrorModal } from "../components/Modal/Modal";
-import { ChangeLogoField } from "../components/Profile/ChangeLogoField";
-import { LogoNameChangeField } from "../components/Profile/LogoNameChangeField";
+import { ChangeLogoField } from "../components/Profile/ChangeLogoField/ChangeLogoField";
+import { LogoNameChangeField } from "../components/Profile/LogoNameChangeField/LogoNameChangeField";
 import { AuthContext } from "../context/auth-context";
 
 export const ProfilePage = () => {

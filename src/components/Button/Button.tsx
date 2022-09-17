@@ -1,7 +1,7 @@
 import { FC, MouseEventHandler, ReactNode } from "react";
 
 export const Button: FC<{
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
   customClasses?: string;
 }> = ({ onClick, children, customClasses }) => {

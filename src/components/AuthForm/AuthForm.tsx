@@ -12,6 +12,7 @@ export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
     if (isRegistering) {
       return navigate("/login");
     }
+
     authCtx.login(true);
     return navigate("/chat");
   };
