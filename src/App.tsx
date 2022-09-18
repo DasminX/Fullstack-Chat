@@ -1,6 +1,3 @@
-import { useContext } from "react";
-import { AuthContext } from "./context/auth-context";
-
 import { Route, Routes } from "react-router-dom";
 
 import { WelcomePage } from "./pages/WelcomePage";
@@ -9,9 +6,9 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { ChatPage } from "./pages/ChatPage";
 import { ProfilePage } from "./pages/ProfilePage";
 
-export function App() {
-  const { isAuth } = useContext(AuthContext);
+import { PrivateRoutes } from "./utils/PrivateRoutes";
 
+export function App() {
   return (
     <Routes>
       <Route path={"/"} element={<WelcomePage />} />
@@ -20,12 +17,10 @@ export function App() {
         path={"register"}
         element={<RegisterPage isRegistering={true} />}
       />
-      {isAuth && (
-        <>
-          <Route path={"chat"} element={<ChatPage />} />
-          <Route path={"profile"} element={<ProfilePage />} />
-        </>
-      )}
+      <Route element={<PrivateRoutes />}>
+        <Route path={"chat"} element={<ChatPage />} />
+        <Route path={"profile"} element={<ProfilePage />} />
+      </Route>
     </Routes>
   );
 }

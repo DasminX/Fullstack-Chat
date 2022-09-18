@@ -19,8 +19,10 @@ export const ChatView = () => {
   };
 
   const sendMessageHandler = (msg: string) => {
-    chatCtx.sendMessage(msg);
-    setMessageText("");
+    if (msg.length > 0) {
+      chatCtx.sendMessage(msg);
+      setMessageText("");
+    }
   };
 
   useEffect(() => {

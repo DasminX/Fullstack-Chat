@@ -26,7 +26,12 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   const sendMessage = (messageText: string) => {
     const newMessagesArray = [
       ...chatMessages,
-      { messageText, id: Math.random().toString().slice(2) },
+      {
+        messageText,
+        id:
+          Math.random().toString().slice(2, 9) +
+          Math.random().toString().slice(2, 9),
+      },
     ];
     setChatMessages(newMessagesArray);
   };
