@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { roomsData, RoomsDataType } from "../../../utils/roomsData";
 import { RoomPreview } from "./RoomPreview/RoomPreview";
 
+/* STYLES */
 const sectionStyles =
   "col-start-1 col-end-4 min-w-320 bg-white px-2 py-1 row-span-full";
 const filterRoomsWrapperStyles =
@@ -11,6 +12,7 @@ const filterRoomsInputStyles =
 const buttonAddRoomStyles =
   "rounded-lg border-2 border-slate-300 p-1 self-center text-lg font-extrabold hover:bg-slate-300 hover:text-white";
 const textNoFoundStyles = "text-center text-black mt-16";
+/* END OF STYLES */
 
 export const RoomsPanel = () => {
   const [searchInputValue, setSearchInputValue] = useState("");
@@ -44,9 +46,9 @@ export const RoomsPanel = () => {
         filteredRoomData.map((room) => (
           <RoomPreview
             key={room.id}
+            roomID={room.id}
             name={room.name}
             imgUrl={room.imgUrl}
-            userInRoom={room.userInRoom}
             activeInRoom={room.activeInRoom}
           />
         ))}

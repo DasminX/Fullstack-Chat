@@ -9,6 +9,11 @@ const ulStyles = "flex basis-1/2 justify-evenly items-center text-white";
 export const Nav = () => {
   const authCtx = useContext(AuthContext);
 
+  const logoutHandler = () => {
+    authCtx.socket.emit("disconnect");
+    authCtx.logout();
+  };
+
   const navLinkStyle = (navLinkData: { isActive: boolean }) => {
     return (
       "cursor-pointer hover:text-slate-400 text-lg" +
@@ -25,11 +30,7 @@ export const Nav = () => {
         <NavLink to={"/profile"} className={navLinkStyle}>
           Profile
         </NavLink>
-        <NavLink
-          to={"/login"}
-          className={navLinkStyle}
-          onClick={authCtx.logout}
-        >
+        <NavLink to={"/login"} className={navLinkStyle} onClick={logoutHandler}>
           Logout
         </NavLink>
       </ul>

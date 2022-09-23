@@ -1,4 +1,5 @@
 import React, { FC, useContext, useRef } from "react";
+
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
 import { Button } from "../Button/Button";
@@ -66,7 +67,7 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
           } = resData.data;
 
           authCtx.login(token);
-          authCtx.setChangeUsername(username);
+          authCtx.changeUsernameHandler(username, false);
 
           return navigate("/chat");
         })

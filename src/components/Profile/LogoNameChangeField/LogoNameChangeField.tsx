@@ -14,6 +14,8 @@ type LogoNameChangeFieldFCType = FC<{
   showLogoChangeHandler: () => void;
 }>;
 
+let temporaryName = "";
+
 export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
   showModalHandler,
   showLogoChangeHandler,
@@ -22,6 +24,11 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
   const inputNameRef = useRef<HTMLInputElement>(null);
   const authCtx = useContext(AuthContext);
 
+  const changeNameHandler = () => {
+    temporaryName = inputNameRef.current!.value;
+    setIsChangingName(true);
+  };
+
   const saveChangingNameHandler = () => {
     if (
       inputNameRef.current!.value.length < 3 ||
@@ -29,12 +36,14 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
     ) {
       return showModalHandler();
     }
-    authCtx.setChangeUsername(inputNameRef.current!.value);
+    temporaryName = "";
+    authCtx.changeUsernameHandler(inputNameRef.current!.value, true);
     setIsChangingName(false);
   };
 
-  const changeNameHandler = () => {
-    setIsChangingName(true);
+  const cancelChangingNameHandler = () => {
+    setIsChangingName(false);
+    inputNameRef.current!.value = temporaryName;
   };
 
   return (
@@ -61,8 +70,16 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
         />
       </div>
       {isChangingName && (
-        <Button customClasses="grow" onClick={saveChangingNameHandler}>
+        <Button customClasses="grow mx-4" onClick={saveChangingNameHandler}>
           Change!
+        </Button>
+      )}
+      {isChangingName && (
+        <Button
+          customClasses="py-1 px-4 border-cyan-700 border-2 bg-slate-200 text-black hover:text-white"
+          onClick={cancelChangingNameHandler}
+        >
+          &times;
         </Button>
       )}
     </section>

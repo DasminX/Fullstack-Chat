@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import { App } from "./App";
 import { AuthContextProvider } from "./context/auth-context";
+import { ChatContextProvider } from "./context/chat-context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <AuthContextProvider>
-      <App />
+      <ChatContextProvider>
+        <App />
+      </ChatContextProvider>
     </AuthContextProvider>
   </BrowserRouter>
 );
