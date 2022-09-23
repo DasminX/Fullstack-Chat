@@ -1,38 +1,41 @@
 import { FC, useContext } from "react";
 import { AuthContext } from "../../../../context/auth-context";
 
-import { avatars } from "../../../../utils/avatars";
+import { avatars, AvatarType } from "../../../../utils/avatars";
 
-export const Message: FC<{ message: string; currentUser: boolean }> = ({
-  message,
-  currentUser,
-}) => {
+const imgWrapperStyles = "h-auto w-1/12 min-w-1/12 ";
+const imgStyles = "rounded-full";
+const msgWrapperStyles =
+  "flex flex-wrap items-center justify-start border-2 border-slate-500 my-1 text-black rounded-lg py-1 px-4 max-w-5/6 ";
+const msgStyles = "break-words w-full";
+
+type MessageFCType = FC<{ message: string; currentUser: boolean }>;
+
+export const Message: MessageFCType = ({ message, currentUser }) => {
   const authCtx = useContext(AuthContext);
 
-  const loggedUserAvatar = avatars.find(
+  const loggedUserAvatar: AvatarType | undefined = avatars.find(
     (avatar) => avatar.avatarUrl === authCtx.userLogo
   );
 
   return (
     <div className={"flex my-2 " + (currentUser ? "justify-end" : "")}>
-      <div
-        className={"h-auto w-1/12 min-w-1/12 " + (currentUser ? "order-2" : "")}
-      >
+      <div className={imgWrapperStyles + (currentUser ? "order-2" : "")}>
         <img
-          className="rounded-full"
-          src={loggedUserAvatar!.avatarUrl}
+          className={imgStyles}
+          src={loggedUserAvatar?.avatarUrl ?? "Img not found!"}
           alt="Avatar..."
         />
       </div>
       <div
         className={
-          "flex flex-wrap items-center justify-start border-2 border-slate-500 my-1 text-black rounded-lg py-1 px-4 max-w-5/6 " +
+          msgWrapperStyles +
           (currentUser
             ? "mr-4"
             : "ml-4 border-transparent bg-slate-300 text-white")
         }
       >
-        <h1 className="break-words w-full">{message}</h1>
+        <h1 className={msgStyles}>{message}</h1>
       </div>
     </div>
   );

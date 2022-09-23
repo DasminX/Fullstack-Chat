@@ -2,11 +2,23 @@ import { FC, useContext, useRef, useState } from "react";
 import { AuthContext } from "../../../context/auth-context";
 import { Button } from "../../Button/Button";
 
-export const LogoNameChangeField: FC<{
-  setErrorHandler: () => void;
+const sectionStyles =
+  "user-info w-full h-32 rounded-t-2xl flex px-8 py-4 border-b-2 border-cyan-700";
+const logoAreaWrapperStyles =
+  "user-image basis-1/4 h-full flex justify-center items-center";
+const changeNameAreaWrapperStyles =
+  "basis-1/2 flex items-center justify-center";
+
+type LogoNameChangeFieldFCType = FC<{
+  showModalHandler: () => void;
   showLogoChangeHandler: () => void;
-}> = ({ setErrorHandler, showLogoChangeHandler }) => {
-  const [isChangingName, setIsChangingName] = useState(false);
+}>;
+
+export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
+  showModalHandler,
+  showLogoChangeHandler,
+}) => {
+  const [isChangingName, setIsChangingName] = useState<boolean>(false);
   const inputNameRef = useRef<HTMLInputElement>(null);
   const authCtx = useContext(AuthContext);
 
@@ -15,7 +27,7 @@ export const LogoNameChangeField: FC<{
       inputNameRef.current!.value.length < 3 ||
       inputNameRef.current!.value.length > 12
     ) {
-      return setErrorHandler();
+      return showModalHandler();
     }
     authCtx.setChangeUsername(inputNameRef.current!.value);
     setIsChangingName(false);
@@ -26,8 +38,8 @@ export const LogoNameChangeField: FC<{
   };
 
   return (
-    <div className="user-info w-full h-32 rounded-t-2xl flex px-8 py-4 border-b-2 border-cyan-700">
-      <div className="user-image basis-1/4 h-full flex justify-center items-center">
+    <section className={sectionStyles}>
+      <div className={logoAreaWrapperStyles}>
         <div className="w-20 h-20">
           <img
             className="object-cover rounded-full cursor-pointer"
@@ -37,7 +49,7 @@ export const LogoNameChangeField: FC<{
           />
         </div>
       </div>
-      <div className="basis-1/2 flex items-center justify-center">
+      <div className={changeNameAreaWrapperStyles}>
         <input
           type="text"
           ref={inputNameRef}
@@ -53,6 +65,6 @@ export const LogoNameChangeField: FC<{
           Change!
         </Button>
       )}
-    </div>
+    </section>
   );
 };

@@ -1,9 +1,19 @@
 import React, { FC, useContext, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
+import { Button } from "../Button/Button";
 import { AuthFormInput } from "./AuthFormInput";
 
-export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
+const mainStyles =
+  "relative h-screen w-full flex justify-center items-center bg-slate-900 text-white";
+const formStyles =
+  "bg-transparent/25 h-2/3 w-1/3 rounded-xl shadow-cyan-400 shadow-2xl border-solid border-indigo-300 border-2 font-semibold leading-8 p-10 flex flex-col justify-around text-center";
+const buttonStyles = "rounded-lg w-1/3 hover:scale-110 duration-150";
+const navLinkStyles = "text-cyan-700 hover:text-cyan-400";
+
+type AuthFormFCType = FC<{ isRegistering: boolean }>;
+
+export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -65,11 +75,8 @@ export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
   };
 
   return (
-    <main className="relative h-screen w-full flex justify-center items-center bg-slate-900 text-white">
-      <form
-        onSubmit={formActionHandler}
-        className="bg-transparent/25 h-2/3 w-1/3 rounded-xl shadow-cyan-400 shadow-2xl border-solid border-indigo-300 border-2 font-semibold leading-8 p-10 flex flex-col justify-around text-center"
-      >
+    <main className={mainStyles}>
+      <form onSubmit={formActionHandler} className={formStyles}>
         <h1 className="text-3xl py-6">
           {isRegistering ? "Register" : "Sign in to join chat lobby!"}
         </h1>
@@ -91,12 +98,9 @@ export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
           />
         )}
         <div className="w-full my-14">
-          <button
-            className="bg-slate-700 px-8 py-2 rounded-lg w-1/3 hover:scale-110 hover:bg-cyan-700 transition duration-150"
-            type="submit"
-          >
+          <Button customClasses={buttonStyles} type="submit">
             {isRegistering ? "Register" : "Login"}
-          </button>
+          </Button>
         </div>
         <p>
           {isRegistering
@@ -104,7 +108,7 @@ export const AuthForm: FC<{ isRegistering: boolean }> = ({ isRegistering }) => {
             : "Not having an account yet? Click "}
           <NavLink
             to={`${isRegistering ? "/login" : "/register"}`}
-            className="text-cyan-700 hover:text-cyan-400"
+            className={navLinkStyles}
           >
             HERE
           </NavLink>

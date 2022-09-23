@@ -13,7 +13,9 @@ import avatar12 from "../images/avatar12.png";
 import avatar13 from "../images/avatar13.png";
 import avatar14 from "../images/avatar14.png";
 
-export const avatars = [
+export type AvatarType = { avatarUrl: string; avatarId: string };
+
+export const avatars: AvatarType[] = [
   { avatarUrl: avatar1, avatarId: Math.random().toString().slice(2) },
   { avatarUrl: avatar2, avatarId: Math.random().toString().slice(2) },
   { avatarUrl: avatar3, avatarId: Math.random().toString().slice(2) },

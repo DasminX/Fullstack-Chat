@@ -2,19 +2,23 @@ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../../context/auth-context";
 
+const navStyles =
+  "relative flex justify-end bg-cyan-900 border-b-2 border-neutral-400  h-14 w-full px-8 py-2";
+const ulStyles = "flex basis-1/2 justify-evenly items-center text-white";
+
 export const Nav = () => {
   const authCtx = useContext(AuthContext);
 
   const navLinkStyle = (navLinkData: { isActive: boolean }) => {
     return (
-      (navLinkData.isActive ? "border-b-2 border-white " : "") +
-      "cursor-pointer hover:text-slate-400 text-lg"
+      "cursor-pointer hover:text-slate-400 text-lg" +
+      (navLinkData.isActive ? " border-b-2 border-white" : "")
     );
   };
 
   return (
-    <nav className="relative flex justify-end bg-cyan-900 border-b-2 border-neutral-400  h-14 w-full px-8 py-2">
-      <ul className="flex basis-1/2 justify-evenly items-center text-white">
+    <nav className={navStyles}>
+      <ul className={ulStyles}>
         <NavLink to={"/chat"} className={navLinkStyle}>
           Chat
         </NavLink>

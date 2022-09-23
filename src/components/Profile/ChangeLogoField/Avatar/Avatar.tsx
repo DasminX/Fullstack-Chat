@@ -1,17 +1,26 @@
 import { FC } from "react";
 
-export const Avatar: FC<{
+const imgWrapperStyles = "logo-wrapper basis-1/3 p-2";
+const imgStyles = "logo-img h-full w-full cursor-pointer ";
+
+type AvatarFCType = FC<{
   avatar: { avatarId: string; avatarUrl: string };
   selectedImg: string;
   selectImgHandler: (avatarUrl: string) => void;
-}> = ({ avatar, selectedImg, selectImgHandler }) => {
+}>;
+
+export const Avatar: AvatarFCType = ({
+  avatar,
+  selectedImg,
+  selectImgHandler,
+}) => {
   return (
-    <div className="logo-wrapper basis-1/3 p-2 " key={avatar.avatarId}>
+    <div className={imgWrapperStyles} key={avatar.avatarId}>
       <img
         src={avatar.avatarUrl}
         alt="Avatar..."
         className={
-          "logo-img h-full w-full cursor-pointer " +
+          imgStyles +
           (avatar.avatarUrl === selectedImg ? "border-2 border-black" : "")
         }
         onClick={() => selectImgHandler(avatar.avatarUrl)}
