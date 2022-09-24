@@ -5,7 +5,7 @@ import { avatars } from "../utils/avatars";
 // Types
 type AuthContextType = {
   isAuth: boolean;
-  login: (tokenString: string) => void;
+  login: (tokenString: string, incomingUserID: string) => void;
   logout: () => void;
   username: string;
   changeUsernameHandler: (username: string, isChanging: boolean) => void;
@@ -13,12 +13,13 @@ type AuthContextType = {
   setChangeLogo: (imageUrl: string) => void;
   token: string;
   socket: any;
+  userID: string;
 };
 
 // Functions
 export const AuthContext = React.createContext<AuthContextType>({
   isAuth: false,
-  login: (tokenString) => {},
+  login: (tokenString, incomingUserID) => {},
   logout: () => {},
   username: "",
   changeUsernameHandler: (username, isChanging) => {},
@@ -26,6 +27,7 @@ export const AuthContext = React.createContext<AuthContextType>({
   setChangeLogo: (imageUrl) => {},
   token: "",
   socket: null,
+  userID: "",
 });
 
 // Provider
@@ -37,16 +39,19 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   const [username, setUsername] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [socket, setSocket] = useState<any>(null);
+  const [userID, setUserID] = useState<string>("");
 
-  const login = (tokenString: string) => {
+  const login = (tokenString: string, incomingUserID: string) => {
     setToken(tokenString);
     setIsAuth(true);
+    setUserID(incomingUserID);
     setSocket(io("http://localhost:3008"));
   };
 
   const logout = () => {
     setToken("");
     setIsAuth(false);
+    setUserID("");
     setSocket(null);
   };
 
@@ -70,6 +75,10 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
       })
         .then((res) => res.json())
         .then((resData) => {
+          //ERRORHANDLING PRZY WSZYSTKICH FETCHACH!!
+          //ERRORHANDLING PRZY WSZYSTKICH FETCHACH!!
+          //ERRORHANDLING PRZY WSZYSTKICH FETCHACH!!
+          //ERRORHANDLING PRZY WSZYSTKICH FETCHACH!!
           console.log(resData);
           setUsername(resData.data.username);
         });
@@ -92,6 +101,7 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
         setChangeLogo,
         token,
         socket,
+        userID,
       }}
     >
       {children}

@@ -1,4 +1,11 @@
-import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  FC,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { ChatContext } from "../../../context/chat-context";
 import { Button } from "../../Button/Button";
 import { Message } from "./Message/Message";
@@ -21,8 +28,9 @@ const sendMsgAreaButtonStyles =
   "bg-white border-2 border-cyan-700 text-black px-4 hover:bg-slate-400 hover:border-transparent hover:text-inherit";
 
 /* END OF STYLES */
+type ChatViewFCType = FC<{ name: string }>;
 
-export const ChatView = () => {
+export const ChatView: ChatViewFCType = ({ name }) => {
   const chatCtx = useContext(ChatContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [messageText, setMessageText] = useState<string>("");
@@ -45,7 +53,7 @@ export const ChatView = () => {
   return (
     <section className={sectionStyles}>
       <div className={upperBannerStyles}>
-        <h1 className={upperBannerH1Styles}>Wariaci React</h1>
+        <h1 className={upperBannerH1Styles}>{name}</h1>
         <button
           onClick={chatCtx.leaveCurrentRoomHandler}
           className={upperBannerButtonStyles}
