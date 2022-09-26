@@ -32,10 +32,14 @@ export const RoomsPanel: RoomsPanelFCType = ({ addNewRoomHandler }) => {
   );
 
   useEffect(() => {
-    socket.on("sending rooms", (rooms: RoomsDataType[]) => {
+    socket.on("SendingRooms", (rooms: RoomsDataType[]) => {
       chatCtx.updateRoomArray(rooms);
       chatCtx.switchLoader(false);
     });
+
+    return () => {
+      socket.off("SendingRooms");
+    };
   }, [socket, chatCtx]);
 
   return (

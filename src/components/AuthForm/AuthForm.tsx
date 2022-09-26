@@ -2,6 +2,7 @@ import React, { FC, useContext, useRef } from "react";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
+import { useFetch } from "../../hooks/useFetch";
 import { Button } from "../Button/Button";
 import { AuthFormInput } from "./AuthFormInput";
 
@@ -22,7 +23,7 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const repeatPasswordInputRef = useRef<HTMLInputElement>(null);
 
-  const formActionHandler = (event: React.FormEvent) => {
+  const formActionHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (isRegistering) {
@@ -32,46 +33,50 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
       )
         return console.log("hasla nie sa takie same");
 
-      fetch("http://localhost:3008/api/auth/register", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          login: loginInputRef.current!.value,
-          password: passwordInputRef.current!.value,
-        }),
-      })
-        .then((res) => res.json())
-        .then((resData) => {
-          if (resData.status === "error")
-            return console.log(resData.data.message);
-          return navigate("/login");
-        })
-        .catch((err) => console.log(err));
+      try {
+        const resData = await useFetch(
+          "http://localhost:3008/api/auth/register",
+          "POST",
+          "",
+          {
+            login: loginInputRef.current!.value,
+            password: passwordInputRef.current!.value,
+          }
+        );
+
+        if (resData.status === "error")
+          return console.log(resData.data.message);
+        return navigate("/login");
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-      fetch("http://localhost:3008/api/auth/login", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          login: loginInputRef.current!.value,
-          password: passwordInputRef.current!.value,
-        }),
-      })
-        .then((res) => res.json())
-        .then((resData) => {
-          if (resData.status === "error")
-            return console.log(resData.data.message);
+      try {
+        const resData = await useFetch(
+          "http://localhost:3008/api/auth/login",
+          "POST",
+          "",
+          {
+            login: loginInputRef.current!.value,
+            password: passwordInputRef.current!.value,
+          }
+        );
 
-          const {
-            token,
-            user: { username, userID },
-          } = resData.data;
+        if (resData.status === "error")
+          return console.log(resData.data.message);
 
-          authCtx.login(token, userID);
-          authCtx.changeUsernameHandler(username, false);
+        const {
+          token,
+          user: { username, userID },
+        } = resData.data;
 
-          return navigate("/chat");
-        })
-        .catch((err) => console.log(err));
+        authCtx.login(token, userID);
+        authCtx.changeUsernameHandler(username, false);
+
+        return navigate("/chat");
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 

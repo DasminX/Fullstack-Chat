@@ -19,7 +19,6 @@ const upperBannerH1Styles = "text-xl font-mono basis-5/6 text-center";
 const upperBannerButtonStyles = "font-extrabold text-3xl hover:text-red-400";
 const chatContentStyles =
   "content basis-3/4 overflow-y-auto overflow-x-hidden p-3 bg-slate-200 flex flex-col";
-
 const sendMsgAreaStyles =
   "sendmsg basis-16  bg-cyan-700  flex justify-between items-center px-10 py-1 rounded-b-xl";
 const sendMsgAreaInputStyles =

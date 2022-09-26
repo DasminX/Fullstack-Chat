@@ -30,16 +30,21 @@ export const ChatPage = () => {
   };
 
   useEffect(() => {
-    socket.on("entered room", (data: RoomsDataType) => {
+    socket.on("EnteredRoom", (data: RoomsDataType) => {
       chatCtx.switchLoader(false);
       setChatViewData(data);
 
       // ZROBIC POPRAWKE NA PRZELACZANIE POMIEDZY POKOJAMI - NIE MA USER DISCONNECT Z POKOJU
     });
 
-    socket.on("left room", () => {
+    socket.on("LeftRoom", () => {
       console.log("User left a room!");
     });
+
+    return () => {
+      socket.off("EnteredRoom");
+      socket.off("LeftRoom");
+    };
   }, [chatCtx, socket]);
 
   return (
