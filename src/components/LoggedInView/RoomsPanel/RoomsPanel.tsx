@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/auth-context";
 import { ChatContext } from "../../../context/chat-context";
-import { RoomsDataType } from "../../../context/chat-context";
+import { RoomDataType } from "../../../context/chat-context";
 import { RoomPreview } from "./RoomPreview/RoomPreview";
 
 /* STYLES */
@@ -16,26 +16,36 @@ const buttonAddRoomStyles =
 const textNoFoundStyles = "text-center text-black mt-16";
 /* END OF STYLES */
 
-type RoomsPanelFCType = FC<{ addNewRoomHandler: () => void }>;
+type RoomsPanelFCType = FC<{ showAddingRoomFieldHandler: () => void }>;
 
-export const RoomsPanel: RoomsPanelFCType = ({ addNewRoomHandler }) => {
-  const [searchInputValue, setSearchInputValue] = useState("");
-  const chatCtx = useContext(ChatContext);
+export const RoomsPanel: RoomsPanelFCType = ({
+  showAddingRoomFieldHandler,
+}) => {
   const { socket } = useContext(AuthContext);
+  const chatCtx = useContext(ChatContext);
+  const [searchInputValue, setSearchInputValue] = useState("");
 
   const filterRoomsHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchInputValue(e.currentTarget.value);
   };
 
-  const filteredRoomData: RoomsDataType[] = chatCtx.rooms.filter((room) =>
+  const filteredRoomData: RoomDataType[] = chatCtx.rooms.filter((room) =>
     room.name.includes(searchInputValue)
   );
 
   useEffect(() => {
-    socket.on("sending rooms", (rooms: RoomsDataType[]) => {
-      chatCtx.updateRoomArray(rooms);
-      chatCtx.switchLoader(false);
+    socket.on("sendingInitialRooms", (rooms: RoomDataType[]) => {
+      chatCtx.updateRoomArray(rooms, true);
     });
+
+    socket.on("sendingAddedRoom", (room: RoomDataType) => {
+      chatCtx.updateRoomArray(room, false);
+    });
+
+    return () => {
+      socket.off("sendingInitialRooms");
+      socket.off("sendingAddedRoom");
+    };
   }, [socket, chatCtx]);
 
   return (
@@ -53,7 +63,10 @@ export const RoomsPanel: RoomsPanelFCType = ({ addNewRoomHandler }) => {
           className={filterRoomsInputStyles}
           onChange={filterRoomsHandler}
         />
-        <button className={buttonAddRoomStyles} onClick={addNewRoomHandler}>
+        <button
+          className={buttonAddRoomStyles}
+          onClick={showAddingRoomFieldHandler}
+        >
           +
         </button>
       </div>

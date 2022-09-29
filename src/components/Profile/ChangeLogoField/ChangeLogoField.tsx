@@ -16,8 +16,8 @@ type ChangeLogoFieldFCType = FC<{
 export const ChangeLogoField: ChangeLogoFieldFCType = ({
   hideChangeLogoHandler,
 }) => {
-  const authCtx = useContext(AuthContext);
-  const [selectedImg, setSelectedImg] = useState<string>(authCtx.userLogo);
+  const { userLogo } = useContext(AuthContext);
+  const [selectedImg, setSelectedImg] = useState<string>(userLogo);
 
   const selectImgHandler = (avatarUrl: string) => {
     setSelectedImg(avatarUrl);

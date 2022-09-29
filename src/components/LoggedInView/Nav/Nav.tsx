@@ -7,11 +7,11 @@ const navStyles =
 const ulStyles = "flex basis-1/2 justify-evenly items-center text-white";
 
 export const Nav = () => {
-  const authCtx = useContext(AuthContext);
+  const { socket, logout } = useContext(AuthContext);
 
   const logoutHandler = () => {
-    authCtx.socket.emit("disconnect");
-    authCtx.logout();
+    socket.emit("disconnect");
+    logout();
   };
 
   const navLinkStyle = (navLinkData: { isActive: boolean }) => {

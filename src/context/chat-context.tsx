@@ -7,9 +7,7 @@ type chatMessageType = {
   id: string;
 };
 
-type RoomIDType = string | null;
-
-export type RoomsDataType = {
+export type RoomDataType = {
   name: string;
   roomID: string;
   logoURL: string;
@@ -17,27 +15,30 @@ export type RoomsDataType = {
 };
 
 type ChatContextType = {
-  roomID: RoomIDType;
+  roomID: string;
   joinRoomHandler: (roomID: string) => void;
   leaveCurrentRoomHandler: () => void;
   chatMessages: chatMessageType[];
   sendMessage: (message: string) => void;
-  loader: boolean;
-  rooms: RoomsDataType[] | [];
-  updateRoomArray: (rooms: RoomsDataType[]) => void;
+  loading: boolean;
+  rooms: RoomDataType[] | [];
+  updateRoomArray: (
+    rooms: RoomDataType[] | RoomDataType,
+    initial: boolean
+  ) => void;
   switchLoader: (isShown: boolean) => void;
 };
 
 // Functions
 export const ChatContext = React.createContext<ChatContextType>({
-  roomID: null,
+  roomID: "",
   joinRoomHandler: (roomID) => {},
   leaveCurrentRoomHandler: () => {},
   chatMessages: [],
   sendMessage: (message) => {},
-  loader: false,
+  loading: false,
   rooms: [],
-  updateRoomArray: (rooms) => {},
+  updateRoomArray: (rooms, initial) => {},
   switchLoader: (isShown) => {},
 });
 
@@ -45,24 +46,30 @@ export const ChatContext = React.createContext<ChatContextType>({
 export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [rooms, setRooms] = useState<RoomsDataType[] | []>([]);
-  const [chatMessages, setChatMessages] = useState<Array<chatMessageType>>([]);
-  const [roomID, setRoomID] = useState<RoomIDType>("");
-  const [loader, setLoader] = useState<boolean>(false);
+  const [rooms, setRooms] = useState<RoomDataType[] | []>([]);
+  const [chatMessages, setChatMessages] = useState<chatMessageType[]>([]);
+  const [roomID, setRoomID] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const authCtx = useContext(AuthContext);
 
-  const updateRoomArray = (rooms: RoomsDataType[]) => {
-    setRooms(rooms);
+  const updateRoomArray = (
+    roomData: RoomDataType[] | RoomDataType,
+    initial: boolean
+  ) => {
+    if (Array.isArray(roomData) && initial) {
+      setRooms(roomData);
+    } else if (!Array.isArray(roomData) && !initial) {
+      setRooms((prevRooms) => [...prevRooms, roomData]);
+    }
   };
 
   const switchLoader = (isShown: boolean) => {
-    setLoader(isShown);
+    setLoading(isShown);
   };
 
   const joinRoomHandler = (clickedRoomID: string) => {
-    setLoader(true);
-    authCtx.socket.emit("join room", {
+    authCtx.socket.emit("joiningRoom", {
       clickedRoomID,
       currentUserID: authCtx.userID,
     });
@@ -70,11 +77,11 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   };
 
   const leaveCurrentRoomHandler = () => {
-    authCtx.socket.emit("leave room", {
-      currentUserID: authCtx.userID,
+    authCtx.socket.emit("leavingRoom", {
       roomID,
+      currentUserID: authCtx.userID,
     });
-    setRoomID(null);
+    setRoomID("");
   };
 
   const sendMessage = (messageText: string) => {
@@ -98,7 +105,7 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
         leaveCurrentRoomHandler,
         chatMessages,
         sendMessage,
-        loader,
+        loading,
         rooms,
         updateRoomArray,
         switchLoader,

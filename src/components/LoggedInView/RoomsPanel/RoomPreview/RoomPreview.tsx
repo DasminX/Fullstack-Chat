@@ -22,8 +22,13 @@ export const RoomPreview: FC<{
   const chatCtx = useContext(ChatContext);
 
   const roomActionHandler = (roomID: string) => {
-    if (roomID !== chatCtx.roomID) chatCtx.joinRoomHandler(roomID);
-    else if (roomID === chatCtx.roomID) chatCtx.leaveCurrentRoomHandler();
+    if (roomID !== chatCtx.roomID) {
+      chatCtx.switchLoader(true);
+      if (chatCtx.roomID !== "") {
+        chatCtx.leaveCurrentRoomHandler();
+      }
+      chatCtx.joinRoomHandler(roomID);
+    } else chatCtx.leaveCurrentRoomHandler();
   };
 
   return (

@@ -9,12 +9,12 @@ const logoAreaWrapperStyles =
 const changeNameAreaWrapperStyles =
   "basis-1/2 flex items-center justify-center";
 
+let temporaryName = "";
+
 type LogoNameChangeFieldFCType = FC<{
   showModalHandler: () => void;
   showLogoChangeHandler: () => void;
 }>;
-
-let temporaryName = "";
 
 export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
   showModalHandler,
@@ -25,7 +25,7 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
   const authCtx = useContext(AuthContext);
 
   const changeNameHandler = () => {
-    temporaryName = inputNameRef.current!.value;
+    temporaryName = inputNameRef.current!.value || "";
     setIsChangingName(true);
   };
 

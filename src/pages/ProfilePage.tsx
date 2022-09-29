@@ -11,9 +11,9 @@ const sectionStyles =
   "col-start-3 col-end-11 row-start-1 row-end-7 my-20 bg-slate-300 rounded-2xl xl:col-start-4 xl:col-end-10";
 
 export const ProfilePage = () => {
+  const { isAuth, setChangeLogo } = useContext(AuthContext);
   const [isErrorModal, setIsErrorModal] = useState<boolean>(false);
   const [isChangingLogo, setIsChangingLogo] = useState<boolean>(false);
-  const authCtx = useContext(AuthContext);
 
   const showModalHandler = () => {
     setIsErrorModal(true);
@@ -29,18 +29,19 @@ export const ProfilePage = () => {
 
   const hideChangeLogoHandler = (imageUrl: string) => {
     setIsChangingLogo(false);
-    authCtx.setChangeLogo(imageUrl);
+    setChangeLogo(imageUrl);
   };
 
   return (
     <>
-      {authCtx.isAuth && <Nav />}
+      {isAuth && <Nav />}
       <main className={mainStyles}>
         <section className={sectionStyles}>
           <LogoNameChangeField
             showModalHandler={showModalHandler}
             showLogoChangeHandler={showLogoChangeHandler}
           />
+          {/* MORE FIELDS ABOUT PROFILE PAGE */}
         </section>
         {isChangingLogo && (
           <ChangeLogoField hideChangeLogoHandler={hideChangeLogoHandler} />

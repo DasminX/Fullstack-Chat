@@ -43,7 +43,7 @@ export const AddNewRoom: AddNewRoomFCType = ({
     e.preventDefault();
     switchLoader(true);
 
-    socket.emit("room added", {
+    socket.emit("roomAdded", {
       name: nameInputRef.current!.value,
       logoURL: URLInputRef.current!.value,
       isPrivate: isPrivateCheckboxRef.current!.checked,

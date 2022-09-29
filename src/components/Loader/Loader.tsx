@@ -1,13 +1,9 @@
-import { FC } from "react";
-
 const modalStyles =
   "bg-black/80 w-full h-screen fixed z-50 flex items-center justify-center flex-col";
 const paragraphStyles =
   "text-2xl tracking-wider font-thin -translate-y-1/3 select-none";
 
-type LoaderFCType = FC<{ message: string }>;
-
-export const Loader: LoaderFCType = ({ message }) => {
+export const Loader = () => {
   return (
     <div className={modalStyles}>
       <div>
@@ -84,7 +80,7 @@ export const Loader: LoaderFCType = ({ message }) => {
             ></animateTransform>
           </circle>
         </svg>
-        <p className={paragraphStyles}>{message}</p>
+        <p className={paragraphStyles}>Please wait...</p>
       </div>
     </div>
   );
