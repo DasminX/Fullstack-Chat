@@ -62,13 +62,19 @@ export const ChatView: ChatViewFCType = ({ name }) => {
         </button>
       </div>
       <div className={chatContentStyles}>
-        {chatCtx.chatMessages.map((message) => (
-          <Message
-            key={message.id}
-            message={message.messageText}
-            currentUser={false}
-          />
-        ))}
+        {Array.isArray(chatCtx.chatMessages) &&
+          chatCtx.chatMessages.length > 0 &&
+          chatCtx.chatMessages.map((message) => (
+            <Message
+              key={message.id}
+              message={message.textMessage}
+              sendByUserID={message.sendByUserID}
+            />
+          ))}
+        {Array.isArray(chatCtx.chatMessages) &&
+          chatCtx.chatMessages.length === 0 && (
+            <p className="text-lg text-black">There are no messages yet!</p> // TODO
+          )}
         <div ref={messagesEndRef}></div>
       </div>
       <div className={sendMsgAreaStyles}>

@@ -30,7 +30,7 @@ export const RoomsPanel: RoomsPanelFCType = ({
   };
 
   const filteredRoomData: RoomDataType[] = chatCtx.rooms.filter((room) =>
-    room.name.includes(searchInputValue)
+    room.name.toLowerCase().includes(searchInputValue.toLowerCase())
   );
 
   useEffect(() => {
@@ -73,8 +73,8 @@ export const RoomsPanel: RoomsPanelFCType = ({
       {filteredRoomData.length > 0 &&
         filteredRoomData.map((room) => (
           <RoomPreview
-            key={room.roomID}
-            roomID={room.roomID}
+            key={room.id}
+            roomID={room.id}
             name={room.name}
             logoURL={room.logoURL}
             activeInRoom={room.activeInRoom}

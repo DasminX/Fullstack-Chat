@@ -9,9 +9,9 @@ const msgWrapperStyles =
   "flex flex-wrap items-center justify-start border-2 border-slate-500 my-1 text-black rounded-lg py-1 px-4 max-w-5/6 ";
 const msgStyles = "break-words w-full";
 
-type MessageFCType = FC<{ message: string; currentUser: boolean }>;
+type MessageFCType = FC<{ message: string; sendByUserID: string }>;
 
-export const Message: MessageFCType = ({ message, currentUser }) => {
+export const Message: MessageFCType = ({ message, sendByUserID }) => {
   const authCtx = useContext(AuthContext);
 
   const loggedUserAvatar: AvatarType | undefined = avatars.find(
@@ -19,8 +19,16 @@ export const Message: MessageFCType = ({ message, currentUser }) => {
   );
 
   return (
-    <div className={"flex my-2 " + (currentUser ? "justify-end" : "")}>
-      <div className={imgWrapperStyles + (currentUser ? "order-2" : "")}>
+    <div
+      className={
+        "flex my-2 " + (sendByUserID === authCtx.userID ? "justify-end" : "")
+      }
+    >
+      <div
+        className={
+          imgWrapperStyles + (sendByUserID === authCtx.userID ? "order-2" : "")
+        }
+      >
         <img
           className={imgStyles}
           src={loggedUserAvatar?.avatarUrl ?? "Img not found!"}
@@ -30,7 +38,7 @@ export const Message: MessageFCType = ({ message, currentUser }) => {
       <div
         className={
           msgWrapperStyles +
-          (currentUser
+          (sendByUserID === authCtx.userID
             ? "mr-4"
             : "ml-4 border-transparent bg-slate-300 text-white")
         }

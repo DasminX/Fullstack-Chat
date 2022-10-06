@@ -63,7 +63,7 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
 
           const {
             token,
-            user: { username, userID },
+            user: { username, id: userID },
           } = resData.data;
 
           authCtx.login(token, userID);

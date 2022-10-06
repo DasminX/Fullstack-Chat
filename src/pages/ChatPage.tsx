@@ -11,6 +11,7 @@ const mainStyle =
 
 type ChatViewDataType = {
   name: string;
+  id: string;
 };
 
 export const ChatPage = () => {
@@ -20,6 +21,7 @@ export const ChatPage = () => {
 
   const [chatViewData, setChatViewData] = useState<ChatViewDataType>({
     name: "",
+    id: "",
   }); // TODO
 
   const showAddingRoomFieldHandler = () => {
@@ -34,15 +36,42 @@ export const ChatPage = () => {
 
   useEffect(() => {
     socket.on("joinedRoom", (data: ChatViewDataType) => {
-      const { name } = data;
+      const { name, id: roomID } = data;
       chatCtx.switchLoader(false);
-      setChatViewData({ name });
+      socket.emit("getInitialMessages", roomID);
+      setChatViewData({ name, id: roomID });
     });
 
     socket.on("leftRoom", () => {
-      setChatViewData({ name: "" });
+      setChatViewData({ name: "", id: "" });
     });
+
+    return () => {
+      socket.off("joinedRoom");
+      socket.off("getInitialMessages");
+      socket.off("leftRoom");
+    };
   }, [chatCtx, socket]);
+
+  useEffect(() => {
+    socket.on("fetchedInitialMessages", (roomMessages: any) => {
+      if (Array.isArray(roomMessages) && roomMessages.length > 0) {
+        chatCtx.getAllMessagesFromDB(roomMessages);
+      }
+    });
+    return () => {
+      socket.off("fetchedInitialMessages");
+    };
+  }, [socket, chatCtx]);
+
+  useEffect(() => {
+    socket.on("receiveMessage", (message: any) => {
+      chatCtx.receiveMessage(message);
+    });
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [socket, chatCtx]);
 
   return (
     <>

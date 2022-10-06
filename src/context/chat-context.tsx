@@ -3,13 +3,14 @@ import { AuthContext } from "./auth-context";
 
 // Types
 type chatMessageType = {
-  messageText: string;
+  textMessage: string;
   id: string;
+  sendByUserID: string;
 };
 
 export type RoomDataType = {
   name: string;
-  roomID: string;
+  id: string;
   logoURL: string;
   activeInRoom: number;
 };
@@ -27,6 +28,8 @@ type ChatContextType = {
     initial: boolean
   ) => void;
   switchLoader: (isShown: boolean) => void;
+  getAllMessagesFromDB: (messages: any[]) => void; //TODO
+  receiveMessage: (message: any) => void; //TODO
 };
 
 // Functions
@@ -40,6 +43,8 @@ export const ChatContext = React.createContext<ChatContextType>({
   rooms: [],
   updateRoomArray: (rooms, initial) => {},
   switchLoader: (isShown) => {},
+  getAllMessagesFromDB: (messages) => {}, //TODO
+  receiveMessage: (message) => {}, //TODO
 });
 
 // Provider
@@ -52,6 +57,8 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const authCtx = useContext(AuthContext);
+
+  console.log(chatMessages);
 
   const updateRoomArray = (
     roomData: RoomDataType[] | RoomDataType,
@@ -77,6 +84,7 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   };
 
   const leaveCurrentRoomHandler = () => {
+    setChatMessages([]);
     authCtx.socket.emit("leavingRoom", {
       roomID,
       currentUserID: authCtx.userID,
@@ -84,15 +92,25 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
     setRoomID("");
   };
 
-  const sendMessage = (messageText: string) => {
-    const newMessagesArray = [
-      ...chatMessages,
-      {
-        messageText,
-        id: Math.random().toString().slice(2, 9),
-      },
-    ];
+  const sendMessage = (textMessage: string) => {
+    const newMessageObj: chatMessageType = {
+      textMessage,
+      id: Math.random().toString().slice(2, 20),
+      sendByUserID: authCtx.userID,
+    };
+    authCtx.socket.emit("sendMessage", newMessageObj, roomID, authCtx.userID);
+
+    const newMessagesArray = [...chatMessages, newMessageObj];
     setChatMessages(newMessagesArray);
+  };
+
+  const getAllMessagesFromDB = (messages: any[]) => {
+    // TODO DO ZMIANY NA TYP
+    setChatMessages(messages);
+  };
+
+  const receiveMessage = (message: any) => {
+    setChatMessages((prevMsgs) => [...prevMsgs, message]);
   };
 
   return (
@@ -107,6 +125,8 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
         rooms,
         updateRoomArray,
         switchLoader,
+        getAllMessagesFromDB,
+        receiveMessage,
       }}
     >
       {children}
