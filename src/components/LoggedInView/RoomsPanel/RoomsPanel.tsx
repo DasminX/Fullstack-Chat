@@ -35,16 +35,16 @@ export const RoomsPanel: RoomsPanelFCType = ({
 
   useEffect(() => {
     socket.on("sendingInitialRooms", (rooms: RoomDataType[]) => {
-      chatCtx.updateRoomArray(rooms, true);
+      chatCtx.updateRoomArray(rooms);
     });
 
-    socket.on("sendingAddedRoom", (room: RoomDataType) => {
-      chatCtx.updateRoomArray(room, false);
+    socket.on("sendingUpdatedRooms", (rooms: RoomDataType[]) => {
+      chatCtx.updateRoomArray(rooms);
     });
 
     return () => {
       socket.off("sendingInitialRooms");
-      socket.off("sendingAddedRoom");
+      socket.off("sendingUpdatedRooms");
     };
   }, [socket, chatCtx]);
 

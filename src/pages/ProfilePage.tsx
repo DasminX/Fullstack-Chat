@@ -29,6 +29,7 @@ export const ProfilePage = () => {
 
   const hideChangeLogoHandler = (imageUrl: string) => {
     setIsChangingLogo(false);
+    console.log(imageUrl);
     setChangeLogo(imageUrl);
   };
 

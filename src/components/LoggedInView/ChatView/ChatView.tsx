@@ -69,6 +69,7 @@ export const ChatView: ChatViewFCType = ({ name }) => {
               key={message.id}
               message={message.textMessage}
               sendByUserID={message.sendByUserID}
+              sendByUserLogo={message.sendByUserLogo}
             />
           ))}
         {Array.isArray(chatCtx.chatMessages) &&

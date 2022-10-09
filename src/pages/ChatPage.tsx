@@ -65,8 +65,8 @@ export const ChatPage = () => {
   }, [socket, chatCtx]);
 
   useEffect(() => {
-    socket.on("receiveMessage", (message: any) => {
-      chatCtx.receiveMessage(message);
+    socket.on("receiveMessage", (message: any, sendByUserLogo: string) => {
+      chatCtx.receiveMessage(message, sendByUserLogo);
     });
     return () => {
       socket.off("receiveMessage");

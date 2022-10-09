@@ -3,9 +3,12 @@ import { AuthContext } from "./auth-context";
 
 // Types
 type chatMessageType = {
-  textMessage: string;
   id: string;
   sendByUserID: string;
+  sendByUserLogo: string;
+  sendDate: string;
+  sendInRoomID: string;
+  textMessage: string;
 };
 
 export type RoomDataType = {
@@ -23,13 +26,10 @@ type ChatContextType = {
   sendMessage: (message: string) => void;
   loading: boolean;
   rooms: RoomDataType[] | [];
-  updateRoomArray: (
-    rooms: RoomDataType[] | RoomDataType,
-    initial: boolean
-  ) => void;
+  updateRoomArray: (rooms: RoomDataType[]) => void;
   switchLoader: (isShown: boolean) => void;
   getAllMessagesFromDB: (messages: any[]) => void; //TODO
-  receiveMessage: (message: any) => void; //TODO
+  receiveMessage: (message: any, sendByUserLogo: string) => void; //TODO
 };
 
 // Functions
@@ -41,10 +41,10 @@ export const ChatContext = React.createContext<ChatContextType>({
   sendMessage: (message) => {},
   loading: false,
   rooms: [],
-  updateRoomArray: (rooms, initial) => {},
+  updateRoomArray: (rooms) => {},
   switchLoader: (isShown) => {},
   getAllMessagesFromDB: (messages) => {}, //TODO
-  receiveMessage: (message) => {}, //TODO
+  receiveMessage: (message, sendByUserLogo) => {}, //TODO
 });
 
 // Provider
@@ -60,15 +60,8 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
 
   console.log(chatMessages);
 
-  const updateRoomArray = (
-    roomData: RoomDataType[] | RoomDataType,
-    initial: boolean
-  ) => {
-    if (Array.isArray(roomData) && initial) {
-      setRooms(roomData);
-    } else if (!Array.isArray(roomData) && !initial) {
-      setRooms((prevRooms) => [...prevRooms, roomData]);
-    }
+  const updateRoomArray = (roomsData: RoomDataType[]) => {
+    setRooms(roomsData);
   };
 
   const switchLoader = (isShown: boolean) => {
@@ -94,14 +87,16 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
 
   const sendMessage = (textMessage: string) => {
     const newMessageObj: chatMessageType = {
-      textMessage,
       id: Math.random().toString().slice(2, 20),
       sendByUserID: authCtx.userID,
+      sendByUserLogo: authCtx.userLogo,
+      sendDate: new Date().toISOString(),
+      sendInRoomID: roomID,
+      textMessage,
     };
-    authCtx.socket.emit("sendMessage", newMessageObj, roomID, authCtx.userID);
+    authCtx.socket.emit("sendMessage", newMessageObj);
 
-    const newMessagesArray = [...chatMessages, newMessageObj];
-    setChatMessages(newMessagesArray);
+    setChatMessages((prevChatMessages) => [...prevChatMessages, newMessageObj]);
   };
 
   const getAllMessagesFromDB = (messages: any[]) => {
@@ -109,8 +104,11 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
     setChatMessages(messages);
   };
 
-  const receiveMessage = (message: any) => {
-    setChatMessages((prevMsgs) => [...prevMsgs, message]);
+  const receiveMessage = (message: any, sendByUserLogo: string) => {
+    setChatMessages((prevMsgs) => [
+      ...prevMsgs,
+      { ...message, sendByUserLogo },
+    ]);
   };
 
   return (

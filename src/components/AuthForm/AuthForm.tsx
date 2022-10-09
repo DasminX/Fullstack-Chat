@@ -63,10 +63,10 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
 
           const {
             token,
-            user: { username, id: userID },
+            user: { username, id: userID, userAvatarImgUrl },
           } = resData.data;
 
-          authCtx.login(token, userID);
+          authCtx.login(token, userID, userAvatarImgUrl);
           authCtx.changeUsernameHandler(username, false);
 
           return navigate("/chat");

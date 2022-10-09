@@ -5,7 +5,11 @@ import { avatars } from "../utils/avatars";
 // Types
 type AuthContextType = {
   isAuth: boolean;
-  login: (tokenString: string, incomingUserID: string) => void;
+  login: (
+    tokenString: string,
+    incomingUserID: string,
+    userAvatarImgUrl: string
+  ) => void;
   logout: () => void;
   username: string;
   changeUsernameHandler: (username: string, isChanging: boolean) => void;
@@ -19,7 +23,7 @@ type AuthContextType = {
 // Functions
 export const AuthContext = React.createContext<AuthContextType>({
   isAuth: false,
-  login: (tokenString, incomingUserID) => {},
+  login: (tokenString, incomingUserID, userAvatarImgUrl) => {},
   logout: () => {},
   username: "",
   changeUsernameHandler: (username, isChanging) => {},
@@ -34,17 +38,22 @@ export const AuthContext = React.createContext<AuthContextType>({
 export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [userLogo, setUserLogo] = useState<string>(avatars[0].avatarUrl);
+  const [userLogo, setUserLogo] = useState<string>("");
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [socket, setSocket] = useState<any>(null);
   const [userID, setUserID] = useState<string>("");
 
-  const login = (tokenString: string, incomingUserID: string) => {
+  const login = (
+    tokenString: string,
+    incomingUserID: string,
+    userAvatarImgUrl: string
+  ) => {
     setToken(tokenString);
     setIsAuth(true);
     setUserID(incomingUserID);
+    setUserLogo(userAvatarImgUrl);
     setSocket(io("http://localhost:3008"));
   };
 
@@ -52,11 +61,26 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
     setToken("");
     setIsAuth(false);
     setUserID("");
+    setUserLogo("");
     setSocket(null);
   };
 
   const setChangeLogo = (imageUrl: string) => {
-    setUserLogo(imageUrl);
+    fetch("http://localhost:3008/api/profile/change-logo", {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ changedLogoUrl: imageUrl }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "error")
+          return console.log("nie udalo sie zmienic logo");
+        setUserLogo(imageUrl);
+      });
   };
 
   const changeUsernameHandler = (typedUsername: string, isChanging = false) => {
@@ -66,7 +90,7 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
     if (isChanging) {
       console.log("changing");
       fetch("http://localhost:3008/api/profile/change-name", {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${token}`,

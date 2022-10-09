@@ -1,3 +1,4 @@
+import React from "react";
 import { FC, useContext, useRef, useState } from "react";
 import { AuthContext } from "../../../context/auth-context";
 import { Button } from "../../Button/Button";
