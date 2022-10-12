@@ -1,5 +1,5 @@
-import { FC } from "react";
 import ReactDOM from "react-dom";
+import { ModalMessageType } from "../../types/componentsTypes";
 
 const modalContentDivWrapperStyles =
   "bg-slate-300 rounded-2xl w-1/3 h-1/3 fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 border-4 border-red-500 p-10 flex flex-col justify-around items-center text-2xl text-center";
@@ -13,8 +13,6 @@ const portalModalContentDiv = document.getElementById(
 const portalModalOverlayDiv = document.getElementById(
   "modal-overlay-root"
 ) as HTMLDivElement;
-
-type ModalMessageType = FC<{ message: string; hideModalHandler: () => void }>;
 
 const ModalContent: ModalMessageType = ({ message, hideModalHandler }) => {
   return (

@@ -1,15 +1,17 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../../context/auth-context";
+import { AuthContextType } from "../../../types/authContextTypes";
 
 const navStyles =
   "relative flex justify-end bg-cyan-900 border-b-2 border-neutral-400  h-14 w-full px-8 py-2";
 const ulStyles = "flex basis-1/2 justify-evenly items-center text-white";
 
 export const Nav = () => {
-  const { socket, logout } = useContext(AuthContext);
+  const { socket, logout } = useContext<AuthContextType>(AuthContext);
 
   const logoutHandler = () => {
+    if (socket === null) return;
     socket.emit("disconnect");
     logout();
   };

@@ -4,6 +4,7 @@ import { ErrorModal } from "../components/Modal/Modal";
 import { ChangeLogoField } from "../components/Profile/ChangeLogoField/ChangeLogoField";
 import { LogoNameChangeField } from "../components/Profile/LogoNameChangeField/LogoNameChangeField";
 import { AuthContext } from "../context/auth-context";
+import { hideChangeLogoFuncType } from "../types/componentsTypes";
 
 const mainStyles =
   "bg-slate-900 h-[calc(100vh-3.5rem)] w-full text-2xl grid grid-cols-12 grid-rows-6";
@@ -27,9 +28,8 @@ export const ProfilePage = () => {
     setIsChangingLogo(true);
   };
 
-  const hideChangeLogoHandler = (imageUrl: string) => {
+  const hideChangeLogoHandler: hideChangeLogoFuncType = (imageUrl) => {
     setIsChangingLogo(false);
-    console.log(imageUrl);
     setChangeLogo(imageUrl);
   };
 

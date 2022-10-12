@@ -1,7 +1,5 @@
-import { FC } from "react";
 import { AuthForm } from "../components/AuthForm/AuthForm";
-
-type LoginPageFCType = FC<{ isRegistering: boolean }>;
+import { LoginPageFCType } from "../types/componentsTypes";
 
 export const LoginPage: LoginPageFCType = ({ isRegistering }) => {
   return <AuthForm isRegistering={isRegistering}></AuthForm>;

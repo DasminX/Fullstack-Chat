@@ -1,5 +1,7 @@
-import { FC, useContext } from "react";
+import { useContext } from "react";
 import { ChatContext } from "../../../../context/chat-context";
+import { ChatContextType } from "../../../../types/chatContextTypes";
+import { RoomPreviewFCType } from "../../../../types/componentsTypes";
 import { Button } from "../../../Button/Button";
 
 /* STYLES */
@@ -13,13 +15,13 @@ const rightSideStyles =
   "text-black text-center self-center grow-2 flex flex-col h-4/5 justify-evenly";
 /* END OF STYLES */
 
-export const RoomPreview: FC<{
-  roomID: string;
-  name: string;
-  logoURL: string;
-  activeInRoom: number;
-}> = ({ roomID, name, logoURL, activeInRoom }) => {
-  const chatCtx = useContext(ChatContext);
+export const RoomPreview: RoomPreviewFCType = ({
+  roomID,
+  roomName,
+  logoURL,
+  activeInRoomNb,
+}) => {
+  const chatCtx = useContext<ChatContextType>(ChatContext);
 
   const roomActionHandler = (roomID: string) => {
     if (roomID !== chatCtx.roomID) {
@@ -36,9 +38,9 @@ export const RoomPreview: FC<{
       <div className={chatImgWrapperStyles}>
         <img src={logoURL} alt={"random"} className={chatImgStyles} />
       </div>
-      <h1 className={chatTitleStyles}>{name}</h1>
+      <h1 className={chatTitleStyles}>{roomName}</h1>
       <div className={rightSideStyles}>
-        <h2 className="">Aktywni: {activeInRoom}</h2>
+        <h2 className="">Aktywni: {activeInRoomNb}</h2>
         <Button
           onClick={() => roomActionHandler(roomID)}
           customClasses={`text-black rounded-xl px-4 py-1 hover:bg-slate-500 hover:scale-110 duration-200 ${

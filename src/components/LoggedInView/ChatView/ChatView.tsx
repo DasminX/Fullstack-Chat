@@ -1,12 +1,7 @@
-import {
-  ChangeEvent,
-  FC,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { ChatContext } from "../../../context/chat-context";
+import { ChatContextType } from "../../../types/chatContextTypes";
+import { ChatViewFCType } from "../../../types/componentsTypes";
 import { Button } from "../../Button/Button";
 import { Message } from "./Message/Message";
 
@@ -28,10 +23,9 @@ const sendMsgAreaButtonStyles =
   "bg-white border-2 border-cyan-700 text-black px-4 hover:bg-slate-400 hover:border-transparent hover:text-inherit";
 
 /* END OF STYLES */
-type ChatViewFCType = FC<{ name: string }>;
 
-export const ChatView: ChatViewFCType = ({ name }) => {
-  const chatCtx = useContext(ChatContext);
+export const ChatView: ChatViewFCType = ({ roomName }) => {
+  const chatCtx = useContext<ChatContextType>(ChatContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [messageText, setMessageText] = useState<string>("");
 
@@ -40,20 +34,21 @@ export const ChatView: ChatViewFCType = ({ name }) => {
   };
 
   const sendMessageHandler = (msg: string) => {
-    if (msg.length > 0) {
-      chatCtx.sendMessage(msg);
-      setMessageText("");
-    }
+    if (msg.length === 0) return;
+    chatCtx.sendMessage(msg);
+    setMessageText("");
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!messagesEndRef.current) return;
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [chatCtx.chatMessages]);
 
   return (
     <section className={sectionStyles}>
+      {/* TODO podzielenie tego bardziej xD */}
       <div className={upperBannerStyles}>
-        <h1 className={upperBannerH1Styles}>{name}</h1>
+        <h1 className={upperBannerH1Styles}>{roomName}</h1>
         <button
           onClick={chatCtx.leaveCurrentRoomHandler}
           className={upperBannerButtonStyles}

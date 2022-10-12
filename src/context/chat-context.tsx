@@ -1,38 +1,12 @@
 import React, { FC, ReactNode, useContext, useState } from "react";
+import {
+  ChatContextType,
+  chatMessageType,
+  RoomDataType,
+} from "../types/chatContextTypes";
 import { AuthContext } from "./auth-context";
 
-// Types
-type chatMessageType = {
-  id: string;
-  sendByUserID: string;
-  sendByUserLogo: string;
-  sendDate: string;
-  sendInRoomID: string;
-  textMessage: string;
-};
-
-export type RoomDataType = {
-  name: string;
-  id: string;
-  logoURL: string;
-  activeInRoom: number;
-};
-
-type ChatContextType = {
-  roomID: string;
-  joinRoomHandler: (roomID: string) => void;
-  leaveCurrentRoomHandler: () => void;
-  chatMessages: chatMessageType[];
-  sendMessage: (message: string) => void;
-  loading: boolean;
-  rooms: RoomDataType[] | [];
-  updateRoomArray: (rooms: RoomDataType[]) => void;
-  switchLoader: (isShown: boolean) => void;
-  getAllMessagesFromDB: (messages: any[]) => void; //TODO
-  receiveMessage: (message: any, sendByUserLogo: string) => void; //TODO
-};
-
-// Functions
+// IDE helper function
 export const ChatContext = React.createContext<ChatContextType>({
   roomID: "",
   joinRoomHandler: (roomID) => {},
@@ -43,8 +17,8 @@ export const ChatContext = React.createContext<ChatContextType>({
   rooms: [],
   updateRoomArray: (rooms) => {},
   switchLoader: (isShown) => {},
-  getAllMessagesFromDB: (messages) => {}, //TODO
-  receiveMessage: (message, sendByUserLogo) => {}, //TODO
+  getAllMessagesFromDB: (messages) => {},
+  receiveMessage: (message, sendByUserLogo) => {},
 });
 
 // Provider
@@ -58,8 +32,6 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
 
   const authCtx = useContext(AuthContext);
 
-  console.log(chatMessages);
-
   const updateRoomArray = (roomsData: RoomDataType[]) => {
     setRooms(roomsData);
   };
@@ -69,6 +41,7 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   };
 
   const joinRoomHandler = (clickedRoomID: string) => {
+    if (authCtx.socket === null) return console.log("blad lub niezalogowany");
     authCtx.socket.emit("joiningRoom", {
       clickedRoomID,
       currentUserID: authCtx.userID,
@@ -78,6 +51,7 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
 
   const leaveCurrentRoomHandler = () => {
     setChatMessages([]);
+    if (authCtx.socket === null) return console.log("blad lub niezalogowany");
     authCtx.socket.emit("leavingRoom", {
       roomID,
       currentUserID: authCtx.userID,
@@ -94,13 +68,13 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
       sendInRoomID: roomID,
       textMessage,
     };
-    authCtx.socket.emit("sendMessage", newMessageObj);
+    if (authCtx.socket === null) return;
 
+    authCtx.socket.emit("sendMessage", newMessageObj);
     setChatMessages((prevChatMessages) => [...prevChatMessages, newMessageObj]);
   };
 
-  const getAllMessagesFromDB = (messages: any[]) => {
-    // TODO DO ZMIANY NA TYP
+  const getAllMessagesFromDB = (messages: chatMessageType[]) => {
     setChatMessages(messages);
   };
 

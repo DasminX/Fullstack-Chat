@@ -1,13 +1,7 @@
-import { FC } from "react";
+import { AvatarFCType } from "../../../../types/componentsTypes";
 
 const imgWrapperStyles = "logo-wrapper basis-1/3 p-2";
 const imgStyles = "logo-img h-full w-full cursor-pointer ";
-
-type AvatarFCType = FC<{
-  avatar: { avatarId: string; avatarUrl: string };
-  selectedImg: string;
-  selectImgHandler: (avatarUrl: string) => void;
-}>;
 
 export const Avatar: AvatarFCType = ({
   avatar,

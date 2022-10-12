@@ -1,5 +1,7 @@
-import { FC, useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../../../context/auth-context";
+import { AuthContextType } from "../../../../types/authContextTypes";
+import { MessageFCType } from "../../../../types/componentsTypes";
 
 const imgWrapperStyles = "h-auto w-1/12 min-w-1/12 ";
 const imgStyles = "rounded-full";
@@ -7,18 +9,12 @@ const msgWrapperStyles =
   "flex flex-wrap items-center justify-start border-2 border-slate-500 my-1 text-black rounded-lg py-1 px-4 max-w-5/6 ";
 const msgStyles = "break-words w-full";
 
-type MessageFCType = FC<{
-  message: string;
-  sendByUserID: string;
-  sendByUserLogo: string;
-}>;
-
 export const Message: MessageFCType = ({
   message,
   sendByUserID,
   sendByUserLogo,
 }) => {
-  const authCtx = useContext(AuthContext);
+  const authCtx = useContext<AuthContextType>(AuthContext);
 
   return (
     <div

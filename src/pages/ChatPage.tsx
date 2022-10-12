@@ -5,14 +5,11 @@ import { Nav } from "../components/LoggedInView/Nav/Nav";
 import { RoomsPanel } from "../components/LoggedInView/RoomsPanel/RoomsPanel";
 import { AuthContext } from "../context/auth-context";
 import { ChatContext } from "../context/chat-context";
+import { chatMessageType } from "../types/chatContextTypes";
+import { ChatViewDataType } from "../types/componentsTypes";
 
 const mainStyle =
   "bg-slate-900 h-[calc(100vh-3.5rem)] w-full text-white grid grid-cols-10 grid-rows-5";
-
-type ChatViewDataType = {
-  name: string;
-  id: string;
-};
 
 export const ChatPage = () => {
   const { isAuth, socket } = useContext(AuthContext);
@@ -22,7 +19,7 @@ export const ChatPage = () => {
   const [chatViewData, setChatViewData] = useState<ChatViewDataType>({
     name: "",
     id: "",
-  }); // TODO
+  });
 
   const showAddingRoomFieldHandler = () => {
     setIsAddingNewRoom(true);
@@ -32,9 +29,9 @@ export const ChatPage = () => {
     setIsAddingNewRoom(false);
   };
 
-  // Loader do zmiany
-
   useEffect(() => {
+    if (socket === null)
+      return console.log("socketa nie ma cos poszlo nie tak");
     socket.on("joinedRoom", (data: ChatViewDataType) => {
       const { name, id: roomID } = data;
       chatCtx.switchLoader(false);
@@ -54,7 +51,9 @@ export const ChatPage = () => {
   }, [chatCtx, socket]);
 
   useEffect(() => {
-    socket.on("fetchedInitialMessages", (roomMessages: any) => {
+    if (socket === null)
+      return console.log("socketa nie ma cos poszlo nie tak");
+    socket.on("fetchedInitialMessages", (roomMessages: chatMessageType[]) => {
       if (Array.isArray(roomMessages) && roomMessages.length > 0) {
         chatCtx.getAllMessagesFromDB(roomMessages);
       }
@@ -65,9 +64,14 @@ export const ChatPage = () => {
   }, [socket, chatCtx]);
 
   useEffect(() => {
-    socket.on("receiveMessage", (message: any, sendByUserLogo: string) => {
-      chatCtx.receiveMessage(message, sendByUserLogo);
-    });
+    if (socket === null)
+      return console.log("socketa nie ma cos poszlo nie tak");
+    socket.on(
+      "receiveMessage",
+      (message: chatMessageType, sendByUserLogo: string) => {
+        chatCtx.receiveMessage(message, sendByUserLogo);
+      }
+    );
     return () => {
       socket.off("receiveMessage");
     };
@@ -80,7 +84,7 @@ export const ChatPage = () => {
         <RoomsPanel showAddingRoomFieldHandler={showAddingRoomFieldHandler} />
         {typeof chatCtx.roomID === "string" &&
           chatCtx.roomID.trim().length > 0 && (
-            <ChatView name={chatViewData.name} />
+            <ChatView roomName={chatViewData.name} />
           )}
         {isAddingNewRoom && (
           <AddNewRoom

@@ -1,9 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FC, FormEvent, useContext, useRef, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../Button/Button";
 import { AuthContext } from "../../../context/auth-context";
 import { ChatContext } from "../../../context/chat-context";
+import { AddNewRoomFCType } from "../../../types/componentsTypes";
+import { AuthContextType } from "../../../types/authContextTypes";
+import { ChatContextType } from "../../../types/chatContextTypes";
 
 const formStyles =
   "col-start-6 col-span-3 row-start-2 row-span-3 rounded-2xl p-4 bg-slate-200 flex flex-col";
@@ -23,13 +26,11 @@ const checkboxStyles = "basis-1/2";
 const eyeIconStyles = "self-center ml-2 cursor-pointer";
 const buttonWrapperStyles = "w-full basis-full flex flex-col-reverse";
 
-type AddNewRoomFCType = FC<{ closeAddingRoomFieldHandler: () => void }>;
-
 export const AddNewRoom: AddNewRoomFCType = ({
   closeAddingRoomFieldHandler,
 }) => {
-  const { socket } = useContext(AuthContext);
-  const { switchLoader } = useContext(ChatContext);
+  const { socket } = useContext<AuthContextType>(AuthContext);
+  const { switchLoader } = useContext<ChatContextType>(ChatContext);
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState<boolean>(false);
   const [isPasswordShown, setIsPasswordShown] = useState<boolean>(false);
@@ -41,24 +42,34 @@ export const AddNewRoom: AddNewRoomFCType = ({
 
   const createRoomHandler = (e: FormEvent) => {
     e.preventDefault();
+
+    if (
+      socket === null ||
+      !nameInputRef.current ||
+      !URLInputRef.current ||
+      !isPrivateCheckboxRef.current ||
+      !passwordInputRef.current
+    )
+      return;
+
     switchLoader(true);
 
     socket.emit("roomAdded", {
-      name: nameInputRef.current!.value,
-      logoURL: URLInputRef.current!.value,
-      isPrivate: isPrivateCheckboxRef.current!.checked,
-      roomPassword: passwordInputRef?.current?.value || "",
+      name: nameInputRef.current.value,
+      logoURL: URLInputRef.current.value,
+      isPrivate: isPrivateCheckboxRef.current.checked,
+      roomPassword: passwordInputRef.current.value || "",
     });
 
     closeAddingRoomFieldHandler();
   };
 
   const onChangeCheckboxHandler = () => {
-    setIsCheckboxChecked((prevVal) => !prevVal);
+    setIsCheckboxChecked((prevCheckboxValue) => !prevCheckboxValue);
   };
 
   const toggleShowPasswordHandler = () => {
-    setIsPasswordShown((prevVal) => !prevVal);
+    setIsPasswordShown((PrevPasswordShownValue) => !PrevPasswordShownValue);
   };
 
   return (

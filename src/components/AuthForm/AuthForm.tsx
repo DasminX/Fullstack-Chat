@@ -1,7 +1,8 @@
-import React, { FC, useContext, useRef } from "react";
+import { FormEvent, useContext, useRef } from "react";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
+import { AuthFormFCType } from "../../types/componentsTypes";
 import { Button } from "../Button/Button";
 import { AuthFormInput } from "./AuthFormInput";
 
@@ -12,8 +13,6 @@ const formStyles =
 const buttonStyles = "rounded-lg w-1/3 hover:scale-110 duration-150";
 const navLinkStyles = "text-cyan-700 hover:text-cyan-400";
 
-type AuthFormFCType = FC<{ isRegistering: boolean }>;
-
 export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const repeatPasswordInputRef = useRef<HTMLInputElement>(null);
 
-  const formActionHandler = (event: React.FormEvent) => {
+  const formActionHandler = async (event: FormEvent) => {
     event.preventDefault();
 
     if (isRegistering) {
@@ -32,46 +31,55 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
       )
         return console.log("hasla nie sa takie same");
 
-      fetch("http://localhost:3008/api/auth/register", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          login: loginInputRef.current!.value,
-          password: passwordInputRef.current!.value,
-        }),
-      })
-        .then((res) => res.json())
-        .then((resData) => {
-          if (resData.status === "error")
-            return console.log(resData.data.message);
-          return navigate("/login");
-        })
-        .catch((err) => console.log(err));
+      try {
+        const res = await fetch("http://localhost:3008/api/auth/register", {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            login: loginInputRef.current!.value,
+            password: passwordInputRef.current!.value,
+          }),
+        });
+
+        const resData = await res.json();
+
+        if (resData.status === "error") throw new Error(resData.data.message);
+
+        // popup ze udalo sie zarejestrowac
+        return navigate("/login");
+      } catch (err) {
+        console.log("nie udalo sie zarejestrowac");
+        console.log(err);
+      }
     } else {
-      fetch("http://localhost:3008/api/auth/login", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
-          login: loginInputRef.current!.value,
-          password: passwordInputRef.current!.value,
-        }),
-      })
-        .then((res) => res.json())
-        .then((resData) => {
-          if (resData.status === "error")
-            return console.log(resData.data.message);
+      try {
+        const res = await fetch("http://localhost:3008/api/auth/login", {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            login: loginInputRef.current!.value,
+            password: passwordInputRef.current!.value,
+          }),
+        });
 
-          const {
-            token,
-            user: { username, id: userID, userAvatarImgUrl },
-          } = resData.data;
+        const resData = await res.json();
 
-          authCtx.login(token, userID, userAvatarImgUrl);
-          authCtx.changeUsernameHandler(username, false);
+        if (resData.status === "error") throw new Error(resData.data.message);
 
-          return navigate("/chat");
-        })
-        .catch((err) => console.log(err));
+        const {
+          token,
+          user: { username, id: userID, userAvatarImgUrl },
+        } = resData.data;
+
+        authCtx.login(token, userID, userAvatarImgUrl);
+        authCtx.changeUsernameHandler(username, false);
+
+        // popup ze pomyslnie zalogowano
+        return navigate("/chat");
+      } catch (err) {
+        console.log("nie udalo sie zalogowac");
+        console.log(err);
+      }
     }
   };
 

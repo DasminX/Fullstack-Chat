@@ -1,7 +1,8 @@
 import { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/auth-context";
 import { ChatContext } from "../../../context/chat-context";
-import { RoomDataType } from "../../../context/chat-context";
+import { AuthContextType } from "../../../types/authContextTypes";
+import { ChatContextType, RoomDataType } from "../../../types/chatContextTypes";
 import { RoomPreview } from "./RoomPreview/RoomPreview";
 
 /* STYLES */
@@ -21,11 +22,12 @@ type RoomsPanelFCType = FC<{ showAddingRoomFieldHandler: () => void }>;
 export const RoomsPanel: RoomsPanelFCType = ({
   showAddingRoomFieldHandler,
 }) => {
-  const { socket } = useContext(AuthContext);
-  const chatCtx = useContext(ChatContext);
-  const [searchInputValue, setSearchInputValue] = useState("");
+  const { socket } = useContext<AuthContextType>(AuthContext);
+  const chatCtx = useContext<ChatContextType>(ChatContext);
+  const [searchInputValue, setSearchInputValue] = useState<string>("");
 
   const filterRoomsHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.currentTarget) return;
     setSearchInputValue(e.currentTarget.value);
   };
 
@@ -34,6 +36,9 @@ export const RoomsPanel: RoomsPanelFCType = ({
   );
 
   useEffect(() => {
+    if (socket === null)
+      return console.log("socketa nie ma cos poszlo nie tak");
+
     socket.on("sendingInitialRooms", (rooms: RoomDataType[]) => {
       chatCtx.updateRoomArray(rooms);
     });
@@ -75,9 +80,9 @@ export const RoomsPanel: RoomsPanelFCType = ({
           <RoomPreview
             key={room.id}
             roomID={room.id}
-            name={room.name}
+            roomName={room.name}
             logoURL={room.logoURL}
-            activeInRoom={room.activeInRoom}
+            activeInRoomNb={room.activeInRoom}
           />
         ))}
       {filteredRoomData.length === 0 && (

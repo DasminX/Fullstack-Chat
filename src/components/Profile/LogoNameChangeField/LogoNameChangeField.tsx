@@ -1,6 +1,7 @@
-import React from "react";
-import { FC, useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../../context/auth-context";
+import { AuthContextType } from "../../../types/authContextTypes";
+import { LogoNameChangeFieldFCType } from "../../../types/componentsTypes";
 import { Button } from "../../Button/Button";
 
 const sectionStyles =
@@ -10,12 +11,9 @@ const logoAreaWrapperStyles =
 const changeNameAreaWrapperStyles =
   "basis-1/2 flex items-center justify-center";
 
-let temporaryName = "";
+const logoImgStyles = "object-cover rounded-full cursor-pointer";
 
-type LogoNameChangeFieldFCType = FC<{
-  showModalHandler: () => void;
-  showLogoChangeHandler: () => void;
-}>;
+let temporaryName = "";
 
 export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
   showModalHandler,
@@ -23,7 +21,7 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
 }) => {
   const [isChangingName, setIsChangingName] = useState<boolean>(false);
   const inputNameRef = useRef<HTMLInputElement>(null);
-  const authCtx = useContext(AuthContext);
+  const authCtx = useContext<AuthContextType>(AuthContext);
 
   const changeNameHandler = () => {
     temporaryName = inputNameRef.current!.value || "";
@@ -31,20 +29,23 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
   };
 
   const saveChangingNameHandler = () => {
+    if (!inputNameRef.current) return;
     if (
-      inputNameRef.current!.value.length < 3 ||
-      inputNameRef.current!.value.length > 12
+      inputNameRef.current.value.length < 3 ||
+      inputNameRef.current.value.length > 12
     ) {
       return showModalHandler();
     }
+
     temporaryName = "";
-    authCtx.changeUsernameHandler(inputNameRef.current!.value, true);
+    authCtx.changeUsernameHandler(inputNameRef.current.value, true);
     setIsChangingName(false);
   };
 
   const cancelChangingNameHandler = () => {
+    if (!inputNameRef.current) return;
     setIsChangingName(false);
-    inputNameRef.current!.value = temporaryName;
+    inputNameRef.current.value = temporaryName;
   };
 
   return (
@@ -52,7 +53,7 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
       <div className={logoAreaWrapperStyles}>
         <div className="w-20 h-20">
           <img
-            className="object-cover rounded-full cursor-pointer"
+            className={logoImgStyles}
             src={authCtx.userLogo}
             alt="profileimg"
             onClick={showLogoChangeHandler}
