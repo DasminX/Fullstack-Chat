@@ -43,22 +43,17 @@ export const AddNewRoom: AddNewRoomFCType = ({
   const createRoomHandler = (e: FormEvent) => {
     e.preventDefault();
 
-    if (
-      socket === null ||
-      !nameInputRef.current ||
-      !URLInputRef.current ||
-      !isPrivateCheckboxRef.current ||
-      !passwordInputRef.current
-    )
-      return;
+    if (socket === null || !nameInputRef.current) return;
 
     switchLoader(true);
 
     socket.emit("roomAdded", {
       name: nameInputRef.current.value,
-      logoURL: URLInputRef.current.value,
-      isPrivate: isPrivateCheckboxRef.current.checked,
-      roomPassword: passwordInputRef.current.value || "",
+      logoURL:
+        URLInputRef.current?.value ||
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png",
+      isPrivate: isPrivateCheckboxRef.current?.checked || false,
+      roomPassword: passwordInputRef.current?.value || "",
     });
 
     closeAddingRoomFieldHandler();

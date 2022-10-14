@@ -85,3 +85,6 @@ export type RoomPreviewFCType = FC<{
   logoURL: string;
   activeInRoomNb: number;
 }>;
+
+// CHAT UPPER BANNER
+export type ChatUpperBannerFCType = FC<{ roomName: string }>;

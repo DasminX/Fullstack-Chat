@@ -27,7 +27,6 @@ export const RoomsPanel: RoomsPanelFCType = ({
   const [searchInputValue, setSearchInputValue] = useState<string>("");
 
   const filterRoomsHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.currentTarget) return;
     setSearchInputValue(e.currentTarget.value);
   };
 

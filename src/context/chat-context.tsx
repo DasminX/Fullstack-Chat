@@ -32,6 +32,8 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
 
   const authCtx = useContext(AuthContext);
 
+  console.log(rooms);
+
   const updateRoomArray = (roomsData: RoomDataType[]) => {
     setRooms(roomsData);
   };
