@@ -88,3 +88,14 @@ export type RoomPreviewFCType = FC<{
 
 // CHAT UPPER BANNER
 export type ChatUpperBannerFCType = FC<{ roomName: string }>;
+
+// ADD ROOM FORM CONTROL
+export type AddRoomFormControlFCType = FC<{
+  isCheckboxChecked: boolean;
+  isPasswordShown: boolean;
+  labelText: string;
+  htmlForID: string;
+  type: string;
+  onChangeCheckboxHandler?: () => void | undefined;
+  toggleShowPasswordHandler?: () => void | undefined;
+}>;

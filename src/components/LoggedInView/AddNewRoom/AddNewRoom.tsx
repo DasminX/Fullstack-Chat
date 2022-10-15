@@ -1,12 +1,11 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormEvent, useContext, useRef, useState } from "react";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../Button/Button";
 import { AuthContext } from "../../../context/auth-context";
 import { ChatContext } from "../../../context/chat-context";
 import { AddNewRoomFCType } from "../../../types/componentsTypes";
 import { AuthContextType } from "../../../types/authContextTypes";
 import { ChatContextType } from "../../../types/chatContextTypes";
+import { AddRoomFormControl } from "./AddRoomFormControl/AddRoomFormControl";
 
 const formStyles =
   "col-start-6 col-span-3 row-start-2 row-span-3 rounded-2xl p-4 bg-slate-200 flex flex-col";
@@ -14,17 +13,18 @@ const formStyles =
 const closeFormButton =
   "text-slate-500 ml-auto text-4xl font-bold cursor-pointer hover:text-black";
 
-const formControlStyles =
-  "relative bg-white w-full h-auto p-3 flex justify-between text-black border-2 border-cyan-700 rounded-md my-4";
-
-const labelTextStyles = "flex items-center justify-center ";
-
-const inputTextStyles = "border-2 border-black rounded-xl px-2 py-1";
-
-const checkboxStyles = "basis-1/2";
-
-const eyeIconStyles = "self-center ml-2 cursor-pointer";
 const buttonWrapperStyles = "w-full basis-full flex flex-col-reverse";
+
+const inputFields = [
+  { labelText: "Enter room name:", htmlForID: "roomName", type: "text" },
+  { labelText: "Enter room logo URL:", htmlForID: "roomURL", type: "text" },
+  { labelText: "Private room:", htmlForID: "private/public", type: "checkbox" },
+  {
+    labelText: "Enter private's room password:",
+    htmlForID: "roomPassword",
+    type: "password",
+  },
+];
 
 export const AddNewRoom: AddNewRoomFCType = ({
   closeAddingRoomFieldHandler,
@@ -72,58 +72,23 @@ export const AddNewRoom: AddNewRoomFCType = ({
       <div className={closeFormButton} onClick={closeAddingRoomFieldHandler}>
         &times;
       </div>
-      <div className={`form-control ${formControlStyles}`}>
-        <label className={labelTextStyles} htmlFor="roomName">
-          Enter room name:
-        </label>
-        <input
-          ref={nameInputRef}
-          className={inputTextStyles}
-          type="text"
-          id="roomName"
+      {inputFields.map((el) => (
+        <AddRoomFormControl
+          isCheckboxChecked={isCheckboxChecked}
+          isPasswordShown={isPasswordShown}
+          labelText={el.labelText}
+          htmlForID={el.htmlForID}
+          type={el.type}
+          onChangeCheckboxHandler={
+            el.type === "checkbox" ? onChangeCheckboxHandler : undefined
+          }
+          toggleShowPasswordHandler={
+            el.htmlForID === "roomPassword"
+              ? toggleShowPasswordHandler
+              : undefined
+          }
         />
-      </div>
-      <div className={`form-control ${formControlStyles}`}>
-        <label className={labelTextStyles} htmlFor="roomURL">
-          Enter room logo URL:
-        </label>
-        <input
-          ref={URLInputRef}
-          className={inputTextStyles}
-          type="text"
-          id="roomURL"
-        />
-      </div>
-      <div className={`form-control ${formControlStyles}`}>
-        <label className={labelTextStyles} htmlFor="private/public">
-          Private room:
-        </label>
-        <input
-          ref={isPrivateCheckboxRef}
-          type="checkbox"
-          id="private/public"
-          className={checkboxStyles}
-          onChange={onChangeCheckboxHandler}
-        />
-      </div>
-      {isCheckboxChecked && (
-        <div className={`form-control ${formControlStyles}`}>
-          <label className={labelTextStyles} htmlFor="roomPassword">
-            Enter private's room password:
-          </label>
-          <input
-            ref={passwordInputRef}
-            className={`${inputTextStyles}`}
-            type={isPasswordShown ? "text" : "password"}
-            id="roomPassword"
-          />
-          <FontAwesomeIcon
-            icon={faEye}
-            className={eyeIconStyles}
-            onClick={toggleShowPasswordHandler}
-          />
-        </div>
-      )}
+      ))}
       <div className={buttonWrapperStyles}>
         <Button type="submit" customClasses="w-3/5 mb-6">
           Create a room!
