@@ -54,19 +54,23 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   };
 
   const setChangeLogo: setChangeLogoFuncType = async (imageUrl) => {
-    const res = await fetch("http://localhost:3008/api/profile/change-logo", {
-      method: "PUT",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ changedLogoUrl: imageUrl }),
-    });
-    const data = await res.json();
+    try {
+      const res = await fetch("http://localhost:3008/api/profile/change-logo", {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ changedLogoUrl: imageUrl }),
+      });
+      const data = await res.json();
 
-    if (data.status === "error")
-      return console.log("nie udalo sie zmienic logo");
-    setUserLogo(imageUrl);
+      if (data.status === "error")
+        return console.log("nie udalo sie zmienic logo");
+      setUserLogo(imageUrl);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const changeUsernameHandler: changeUsernameFuncType = async (
@@ -78,18 +82,26 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
     // Case when im changing username from profile page - POSTing new username, saving in DB, getting back and saving in ctx
     if (isChanging) {
       console.log("changing");
-      const res = await fetch("http://localhost:3008/api/profile/change-name", {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ changedName: typedUsername }),
-      });
-      const resData = await res.json();
-      if (resData.status !== "ok") return console.log("nie udalo sie zmienic");
+      try {
+        const res = await fetch(
+          "http://localhost:3008/api/profile/change-name",
+          {
+            method: "PUT",
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ changedName: typedUsername }),
+          }
+        );
+        const resData = await res.json();
+        if (resData.status !== "ok")
+          return console.log("nie udalo sie zmienic");
 
-      setUsername(resData.data.username);
+        setUsername(resData.data.username);
+      } catch (e) {
+        console.log(e);
+      }
     } else {
       // Case when im changing username initially - getting user info when loggin in and saving in ctx
       console.log("initial");

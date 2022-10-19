@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AddNewRoom } from "../components/LoggedInView/AddNewRoom/AddNewRoom";
 import { ChatView } from "../components/LoggedInView/ChatView/ChatView";
 import { Nav } from "../components/LoggedInView/Nav/Nav";
+import { RoomPasswordPrompt } from "../components/LoggedInView/RoomPasswordPrompt/RoomPasswordPrompt";
 import { RoomsPanel } from "../components/LoggedInView/RoomsPanel/RoomsPanel";
 import { AuthContext } from "../context/auth-context";
 import { ChatContext } from "../context/chat-context";
@@ -15,6 +16,8 @@ export const ChatPage = () => {
   const { isAuth, socket } = useContext(AuthContext);
   const chatCtx = useContext(ChatContext);
   const [isAddingNewRoom, setIsAddingNewRoom] = useState<boolean>(false);
+
+  const [roomPassword, setRoomPassword] = useState<string>("");
 
   const [chatViewData, setChatViewData] = useState<ChatViewDataType>({
     name: "",
@@ -30,52 +33,84 @@ export const ChatPage = () => {
   };
 
   useEffect(() => {
-    if (socket === null)
-      return console.log("socketa nie ma cos poszlo nie tak");
-    socket.on("joinedRoom", (data: ChatViewDataType) => {
+    if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
+
+    socket.on("joinedRoom", (data: ChatViewDataType, systemMsg: string) => {
       const { name, id: roomID } = data;
       chatCtx.switchLoader(false);
+      chatCtx.sendMessage(systemMsg, true);
       socket.emit("getInitialMessages", roomID);
       setChatViewData({ name, id: roomID });
     });
 
-    socket.on("leftRoom", () => {
+    return () => {
+      socket.off("joinedRoom");
+    };
+  }, [chatCtx, socket]);
+
+  useEffect(() => {
+    if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
+
+    socket.on("leftRoom", (roomID: string, systemMsg: string) => {
+      // chyba potrzebne room id
+      chatCtx.sendMessage(systemMsg, true, roomID);
       setChatViewData({ name: "", id: "" });
     });
 
     return () => {
-      socket.off("joinedRoom");
-      socket.off("getInitialMessages");
       socket.off("leftRoom");
     };
   }, [chatCtx, socket]);
 
   useEffect(() => {
-    if (socket === null)
-      return console.log("socketa nie ma cos poszlo nie tak");
+    if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
+
     socket.on("fetchedInitialMessages", (roomMessages: chatMessageType[]) => {
       if (Array.isArray(roomMessages) && roomMessages.length > 0) {
         chatCtx.getAllMessagesFromDB(roomMessages);
       }
     });
+
     return () => {
       socket.off("fetchedInitialMessages");
     };
   }, [socket, chatCtx]);
 
   useEffect(() => {
-    if (socket === null)
-      return console.log("socketa nie ma cos poszlo nie tak");
+    if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
+
     socket.on(
       "receiveMessage",
       (message: chatMessageType, sendByUserLogo: string) => {
         chatCtx.receiveMessage(message, sendByUserLogo);
       }
     );
+
     return () => {
       socket.off("receiveMessage");
     };
   }, [socket, chatCtx]);
+
+  useEffect(() => {
+    if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
+
+    socket.on("roomPasswordPrompt", (roomPasswordPrompt: string) => {
+      setRoomPassword(roomPasswordPrompt);
+    });
+
+    return () => {
+      socket.off("roomPasswordPrompt");
+    };
+  }, [socket]);
+
+  const checkRoomPasswordIsCorrect = (enteredRoomPassword: string) => {
+    if (enteredRoomPassword === roomPassword) {
+      console.log("poprawne");
+      setRoomPassword("");
+    } else {
+      console.log("zle haslo");
+    }
+  };
 
   return (
     <>
@@ -90,6 +125,11 @@ export const ChatPage = () => {
           <AddNewRoom
             closeAddingRoomFieldHandler={closeAddingRoomFieldHandler}
           />
+        )}
+        {roomPassword.length > 0 && (
+          <RoomPasswordPrompt
+            checkRoomPasswordIsCorrect={checkRoomPasswordIsCorrect}
+          ></RoomPasswordPrompt>
         )}
       </main>
     </>

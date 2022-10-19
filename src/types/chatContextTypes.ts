@@ -1,7 +1,7 @@
 export type chatMessageType = {
   id: string;
   sendByUserID: string;
-  sendByUserLogo: string;
+  sendByUserLogo?: string;
   sendDate: string;
   sendInRoomID: string;
   textMessage: string;
@@ -16,7 +16,11 @@ export type RoomDataType = {
 
 export type joinRoomFuncType = (roomID: string) => void;
 
-export type sendMsgFuncType = (message: string) => void;
+export type sendMsgFuncType = (
+  message: string,
+  isSystemMsg: boolean,
+  leavingRoomID?: string
+) => void;
 
 export type updateRoomFuncType = (rooms: RoomDataType[]) => void;
 

@@ -74,7 +74,7 @@ export type ChatViewFCType = FC<{ roomName: string }>;
 export type MessageFCType = FC<{
   message: string;
   sendByUserID: string;
-  sendByUserLogo: string;
+  sendByUserLogo?: string;
 }>;
 
 // ROOM PREVIEW

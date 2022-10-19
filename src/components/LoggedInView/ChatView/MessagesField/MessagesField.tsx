@@ -21,14 +21,26 @@ export const MessagesField = () => {
     <div className={chatContentStyles}>
       {Array.isArray(chatCtx.chatMessages) &&
         chatCtx.chatMessages.length > 0 &&
-        chatCtx.chatMessages.map((message) => (
-          <Message
-            key={message.id}
-            message={message.textMessage}
-            sendByUserID={message.sendByUserID}
-            sendByUserLogo={message.sendByUserLogo}
-          />
-        ))}
+        chatCtx.chatMessages.map((message) => {
+          if ("sendByUserID" in message) {
+            return (
+              <Message
+                key={message.id}
+                message={message.textMessage}
+                sendByUserID={message.sendByUserID || ""}
+                sendByUserLogo={message.sendByUserLogo}
+              />
+            );
+          } else {
+            return (
+              <Message
+                key={message.id}
+                message={message.textMessage}
+                sendByUserID={message.sendByUserID}
+              />
+            );
+          }
+        })}
       {Array.isArray(chatCtx.chatMessages) &&
         chatCtx.chatMessages.length === 0 && (
           <p className="text-lg text-black">There are no messages yet!</p> // TODO

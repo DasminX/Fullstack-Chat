@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Nav } from "../components/LoggedInView/Nav/Nav";
 import { ErrorModal } from "../components/Modal/Modal";
 import { ChangeLogoField } from "../components/Profile/ChangeLogoField/ChangeLogoField";
+import { LoginChangeField } from "../components/Profile/LoginChangeField/LoginChangeField";
 import { LogoNameChangeField } from "../components/Profile/LogoNameChangeField/LogoNameChangeField";
 import { AuthContext } from "../context/auth-context";
 import { hideChangeLogoFuncType } from "../types/componentsTypes";
@@ -42,7 +43,7 @@ export const ProfilePage = () => {
             showModalHandler={showModalHandler}
             showLogoChangeHandler={showLogoChangeHandler}
           />
-          {/* MORE FIELDS ABOUT PROFILE PAGE */}
+          <LoginChangeField showModalHandler={showModalHandler} />
         </section>
         {isChangingLogo && (
           <ChangeLogoField hideChangeLogoHandler={hideChangeLogoHandler} />

@@ -12,7 +12,7 @@ export const ChatContext = React.createContext<ChatContextType>({
   joinRoomHandler: (roomID) => {},
   leaveCurrentRoomHandler: () => {},
   chatMessages: [],
-  sendMessage: (message) => {},
+  sendMessage: (message, isSystemMsg, roomID) => {},
   loading: false,
   rooms: [],
   updateRoomArray: (rooms) => {},
@@ -25,14 +25,12 @@ export const ChatContext = React.createContext<ChatContextType>({
 export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [rooms, setRooms] = useState<RoomDataType[] | []>([]);
+  const [rooms, setRooms] = useState<RoomDataType[]>([]);
   const [chatMessages, setChatMessages] = useState<chatMessageType[]>([]);
   const [roomID, setRoomID] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const authCtx = useContext(AuthContext);
-
-  console.log(rooms);
 
   const updateRoomArray = (roomsData: RoomDataType[]) => {
     setRooms(roomsData);
@@ -48,32 +46,49 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
       clickedRoomID,
       currentUserID: authCtx.userID,
     });
+
     setRoomID(clickedRoomID);
   };
 
   const leaveCurrentRoomHandler = () => {
-    setChatMessages([]);
     if (authCtx.socket === null) return console.log("blad lub niezalogowany");
+
     authCtx.socket.emit("leavingRoom", {
       roomID,
       currentUserID: authCtx.userID,
     });
+    setChatMessages([]);
     setRoomID("");
   };
 
-  const sendMessage = (textMessage: string) => {
-    const newMessageObj: chatMessageType = {
-      id: Math.random().toString().slice(2, 20),
-      sendByUserID: authCtx.userID,
-      sendByUserLogo: authCtx.userLogo,
-      sendDate: new Date().toISOString(),
-      sendInRoomID: roomID,
-      textMessage,
-    };
+  const sendMessage = (
+    textMessage: string,
+    isSystemMsg: boolean,
+    leavingRoomID: string = ""
+  ) => {
     if (authCtx.socket === null) return;
+    let msgObj: chatMessageType;
+    if (isSystemMsg) {
+      msgObj = {
+        id: Math.random().toString().slice(2, 20),
+        sendByUserID: "system",
+        sendDate: new Date().toISOString(),
+        sendInRoomID: roomID || leavingRoomID,
+        textMessage,
+      };
+    } else {
+      msgObj = {
+        id: Math.random().toString().slice(2, 20),
+        sendByUserID: authCtx.userID,
+        sendByUserLogo: authCtx.userLogo,
+        sendDate: new Date().toISOString(),
+        sendInRoomID: roomID,
+        textMessage,
+      };
+    }
 
-    authCtx.socket.emit("sendMessage", newMessageObj);
-    setChatMessages((prevChatMessages) => [...prevChatMessages, newMessageObj]);
+    authCtx.socket.emit("sendMessage", msgObj);
+    setChatMessages((prevChatMessages) => [...prevChatMessages, msgObj]);
   };
 
   const getAllMessagesFromDB = (messages: chatMessageType[]) => {

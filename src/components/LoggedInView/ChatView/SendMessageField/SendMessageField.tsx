@@ -21,7 +21,7 @@ export const SendMessageField = () => {
 
   const sendMessageHandler = (msg: string) => {
     if (msg.length === 0) return;
-    chatCtx.sendMessage(msg);
+    chatCtx.sendMessage(msg, false);
     setMessageText("");
   };
   return (

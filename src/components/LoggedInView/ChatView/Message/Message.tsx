@@ -16,6 +16,18 @@ export const Message: MessageFCType = ({
 }) => {
   const authCtx = useContext<AuthContextType>(AuthContext);
 
+  if (
+    sendByUserID === "system" ||
+    sendByUserID == null ||
+    sendByUserLogo == null
+  ) {
+    return (
+      <div className="flex my-1 justify-center">
+        <h1 className="text-gray-500">{message}</h1>
+      </div>
+    );
+  }
+
   return (
     <div
       className={
