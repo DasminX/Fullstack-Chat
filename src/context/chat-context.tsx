@@ -19,6 +19,7 @@ export const ChatContext = React.createContext<ChatContextType>({
   switchLoader: (isShown) => {},
   getAllMessagesFromDB: (messages) => {},
   receiveMessage: (message, sendByUserLogo) => {},
+  // setRoomIDHandler: (roomID) => {},
 });
 
 // Provider
@@ -47,7 +48,7 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
       currentUserID: authCtx.userID,
     });
 
-    setRoomID(clickedRoomID);
+    setRoomID(roomID);
   };
 
   const leaveCurrentRoomHandler = () => {
@@ -102,6 +103,8 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
     ]);
   };
 
+  // const setRoomIDHandler = (roomID: string) => setRoomID(roomID);
+
   return (
     <ChatContext.Provider
       value={{
@@ -116,6 +119,7 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
         switchLoader,
         getAllMessagesFromDB,
         receiveMessage,
+        // setRoomIDHandler,
       }}
     >
       {children}

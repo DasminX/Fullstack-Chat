@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AddNewRoom } from "../components/LoggedInView/AddNewRoom/AddNewRoom";
 import { ChatView } from "../components/LoggedInView/ChatView/ChatView";
 import { Nav } from "../components/LoggedInView/Nav/Nav";
-import { RoomPasswordPrompt } from "../components/LoggedInView/RoomPasswordPrompt/RoomPasswordPrompt";
+// import { RoomPasswordPrompt } from "../components/LoggedInView/RoomPasswordPrompt/RoomPasswordPrompt";
 import { RoomsPanel } from "../components/LoggedInView/RoomsPanel/RoomsPanel";
 import { AuthContext } from "../context/auth-context";
 import { ChatContext } from "../context/chat-context";
@@ -17,7 +17,7 @@ export const ChatPage = () => {
   const chatCtx = useContext(ChatContext);
   const [isAddingNewRoom, setIsAddingNewRoom] = useState<boolean>(false);
 
-  const [roomPassword, setRoomPassword] = useState<string>("");
+  // const [roomPassword, setRoomPassword] = useState<string>("");
 
   const [chatViewData, setChatViewData] = useState<ChatViewDataType>({
     name: "",
@@ -38,6 +38,7 @@ export const ChatPage = () => {
     socket.on("joinedRoom", (data: ChatViewDataType, systemMsg: string) => {
       const { name, id: roomID } = data;
       chatCtx.switchLoader(false);
+      // chatCtx.setRoomIDHandler(roomID);
       chatCtx.sendMessage(systemMsg, true);
       socket.emit("getInitialMessages", roomID);
       setChatViewData({ name, id: roomID });
@@ -52,7 +53,6 @@ export const ChatPage = () => {
     if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
 
     socket.on("leftRoom", (roomID: string, systemMsg: string) => {
-      // chyba potrzebne room id
       chatCtx.sendMessage(systemMsg, true, roomID);
       setChatViewData({ name: "", id: "" });
     });
@@ -91,7 +91,7 @@ export const ChatPage = () => {
     };
   }, [socket, chatCtx]);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
 
     socket.on("roomPasswordPrompt", (roomPasswordPrompt: string) => {
@@ -101,16 +101,17 @@ export const ChatPage = () => {
     return () => {
       socket.off("roomPasswordPrompt");
     };
-  }, [socket]);
+  }, [socket]); */
 
-  const checkRoomPasswordIsCorrect = (enteredRoomPassword: string) => {
+  /*   const checkRoomPasswordIsCorrect = (enteredRoomPassword: string) => {
+    if (socket == null) return console.log("socketa nie ma cos poszlo nie tak");
     if (enteredRoomPassword === roomPassword) {
-      console.log("poprawne");
       setRoomPassword("");
+      socket.emit('joiningPrivateRoom', {})
     } else {
       console.log("zle haslo");
     }
-  };
+  }; */
 
   return (
     <>
@@ -126,11 +127,11 @@ export const ChatPage = () => {
             closeAddingRoomFieldHandler={closeAddingRoomFieldHandler}
           />
         )}
-        {roomPassword.length > 0 && (
+        {/*         {roomPassword.length > 0 && (
           <RoomPasswordPrompt
             checkRoomPasswordIsCorrect={checkRoomPasswordIsCorrect}
           ></RoomPasswordPrompt>
-        )}
+        )} */}
       </main>
     </>
   );

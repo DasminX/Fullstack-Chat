@@ -28,6 +28,8 @@ export type switchLoaderFuncType = (isShown: boolean) => void;
 
 export type getAllMsgFuncType = (messages: chatMessageType[]) => void;
 
+// export type setRoomIDHandlerType = (messages: string) => void;
+
 export type receiveMsgFuncType = (
   message: chatMessageType,
   sendByUserLogo: string
@@ -45,4 +47,5 @@ export type ChatContextType = {
   switchLoader: switchLoaderFuncType;
   getAllMessagesFromDB: getAllMsgFuncType;
   receiveMessage: receiveMsgFuncType;
+  // setRoomIDHandler: setRoomIDHandlerType;
 };
