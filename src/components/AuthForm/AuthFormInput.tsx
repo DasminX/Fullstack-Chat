@@ -1,23 +1,27 @@
+import { Flex, Input } from "@chakra-ui/react";
 import React from "react";
 import { AuthFormInputFCRefType } from "../../types/componentsTypes";
 
-const wrapperDivStyles = "my-4 flex flex-col text-center";
-const labelStyles = "basis-1/4 w-full";
-const inputStyles =
-  "basis-1/2 w-3/4 mx-auto px-2 py-1 rounded-md bg-gray-100 focus:border-black text-black focus-within:text-black";
-
 export const AuthFormInput: AuthFormInputFCRefType = React.forwardRef(
   ({ inputName, inputType }, forwardedRef) => (
-    <div className={wrapperDivStyles}>
-      <label className={labelStyles} htmlFor={inputName}>
+    <Flex my="4" direction="column" textAlign="center">
+      <label className="basis-1/4 w-full" htmlFor={inputName}>
         {inputName}
       </label>
-      <input
+      <Input
         ref={forwardedRef}
-        className={inputStyles}
         type={inputType}
         id={inputName}
+        flexBasis="50%"
+        w="75%"
+        mx="auto"
+        px="2"
+        py="1"
+        rounded="md"
+        variant={"filled"}
+        errorBorderColor="red.300"
+        className="bg-gray-100 text-black focus-within:text-white"
       />
-    </div>
+    </Flex>
   )
 );

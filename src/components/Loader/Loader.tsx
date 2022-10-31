@@ -1,11 +1,17 @@
-const modalStyles =
-  "bg-black/80 w-full h-screen fixed z-50 flex items-center justify-center flex-col";
-const paragraphStyles =
-  "text-2xl tracking-wider font-thin -translate-y-1/3 select-none";
+import { Flex } from "@chakra-ui/react";
 
 export const Loader = () => {
   return (
-    <div className={modalStyles}>
+    <Flex
+      w="full"
+      h="100vh"
+      pos="fixed"
+      align="center"
+      justify="center"
+      direction="column"
+      zIndex="50"
+      className="bg-black/80"
+    >
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -80,8 +86,10 @@ export const Loader = () => {
             ></animateTransform>
           </circle>
         </svg>
-        <p className={paragraphStyles}>Please wait...</p>
+        <p className="text-2xl tracking-wider font-thin -translate-y-1/3 select-none">
+          Please wait...
+        </p>
       </div>
-    </div>
+    </Flex>
   );
 };

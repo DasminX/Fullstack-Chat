@@ -2,7 +2,6 @@ export type chatMessageType = {
   id: string;
   sendByUserID: string;
   sendByUserLogo?: string;
-  sendDate: string;
   sendInRoomID: string;
   textMessage: string;
 };

@@ -1,3 +1,4 @@
+import { Grid } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { AddNewRoom } from "../components/LoggedInView/AddNewRoom/AddNewRoom";
 import { ChatView } from "../components/LoggedInView/ChatView/ChatView";
@@ -8,9 +9,6 @@ import { AuthContext } from "../context/auth-context";
 import { ChatContext } from "../context/chat-context";
 import { chatMessageType } from "../types/chatContextTypes";
 import { ChatViewDataType } from "../types/componentsTypes";
-
-const mainStyle =
-  "bg-slate-900 h-[calc(100vh-3.5rem)] w-full text-white grid grid-cols-10 grid-rows-5";
 
 export const ChatPage = () => {
   const { isAuth, socket } = useContext(AuthContext);
@@ -116,7 +114,13 @@ export const ChatPage = () => {
   return (
     <>
       {isAuth && <Nav />}
-      <main className={mainStyle}>
+      <Grid
+        className="bg-slate-900 grid-cols-10 grid-rows-5"
+        as={"main"}
+        height={"calc(100vh - 3.5rem)"}
+        width={"full"}
+        textColor={"white"}
+      >
         <RoomsPanel showAddingRoomFieldHandler={showAddingRoomFieldHandler} />
         {typeof chatCtx.roomID === "string" &&
           chatCtx.roomID.trim().length > 0 && (
@@ -132,7 +136,7 @@ export const ChatPage = () => {
             checkRoomPasswordIsCorrect={checkRoomPasswordIsCorrect}
           ></RoomPasswordPrompt>
         )} */}
-      </main>
+      </Grid>
     </>
   );
 };

@@ -1,3 +1,4 @@
+import { Grid } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { Nav } from "../components/LoggedInView/Nav/Nav";
 import { ErrorModal } from "../components/Modal/Modal";
@@ -6,11 +7,6 @@ import { LoginChangeField } from "../components/Profile/LoginChangeField/LoginCh
 import { LogoNameChangeField } from "../components/Profile/LogoNameChangeField/LogoNameChangeField";
 import { AuthContext } from "../context/auth-context";
 import { hideChangeLogoFuncType } from "../types/componentsTypes";
-
-const mainStyles =
-  "bg-slate-900 h-[calc(100vh-3.5rem)] w-full text-2xl grid grid-cols-12 grid-rows-6";
-const sectionStyles =
-  "col-start-3 col-end-11 row-start-1 row-end-7 my-20 bg-slate-300 rounded-2xl xl:col-start-4 xl:col-end-10";
 
 export const ProfilePage = () => {
   const { isAuth, setChangeLogo } = useContext(AuthContext);
@@ -37,14 +33,29 @@ export const ProfilePage = () => {
   return (
     <>
       {isAuth && <Nav />}
-      <main className={mainStyles}>
-        <section className={sectionStyles}>
+      <Grid
+        className={"bg-slate-900 grid-cols-12 grid-rows-6"}
+        as="main"
+        h={"calc(100vh - 3.5rem)"}
+        w={"full"}
+        fontSize={"2xl"}
+      >
+        <Grid
+          className={"bg-slate-300"}
+          as={"section"}
+          gridColumnStart={3}
+          gridColumnEnd={11}
+          gridRowStart={1}
+          gridRowEnd={7}
+          my={20}
+          rounded={"2xl"}
+        >
           <LogoNameChangeField
             showModalHandler={showModalHandler}
             showLogoChangeHandler={showLogoChangeHandler}
           />
           <LoginChangeField showModalHandler={showModalHandler} />
-        </section>
+        </Grid>
         {isChangingLogo && (
           <ChangeLogoField hideChangeLogoHandler={hideChangeLogoHandler} />
         )}
@@ -54,7 +65,7 @@ export const ProfilePage = () => {
             hideModalHandler={hideModalHandler}
           />
         )}
-      </main>
+      </Grid>
     </>
   );
 };

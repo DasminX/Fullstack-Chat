@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { FormEvent, useContext, useRef } from "react";
 
 import { NavLink, useNavigate } from "react-router-dom";
@@ -6,8 +7,7 @@ import { AuthFormFCType } from "../../types/componentsTypes";
 import { Button } from "../Button/Button";
 import { AuthFormInput } from "./AuthFormInput";
 
-const mainStyles =
-  "relative h-screen w-full flex justify-center items-center bg-slate-900 text-white";
+const mainStyles = "relative h-screen w-full bg-slate-900 text-white";
 const formStyles =
   "bg-transparent/25 h-2/3 w-1/3 rounded-xl shadow-cyan-400 shadow-2xl border-solid border-indigo-300 border-2 font-semibold leading-8 p-10 flex flex-col justify-around text-center";
 const buttonStyles = "rounded-lg w-1/3 hover:scale-110 duration-150";
@@ -84,7 +84,7 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
   };
 
   return (
-    <main className={mainStyles}>
+    <Flex as="main" justify="center" align="center" className={mainStyles}>
       <form onSubmit={formActionHandler} className={formStyles}>
         <h1 className="text-3xl py-6">
           {isRegistering ? "Register" : "Sign in to join chat lobby!"}
@@ -124,6 +124,6 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
           {isRegistering ? " to sign in." : " to register."}
         </p>
       </form>
-    </main>
+    </Flex>
   );
 };

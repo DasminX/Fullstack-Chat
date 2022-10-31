@@ -65,15 +65,15 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   const sendMessage = (
     textMessage: string,
     isSystemMsg: boolean,
-    leavingRoomID: string = ""
+    leavingRoomID = ""
   ) => {
     if (authCtx.socket === null) return;
     let msgObj: chatMessageType;
+    console.log(roomID);
     if (isSystemMsg) {
       msgObj = {
         id: Math.random().toString().slice(2, 20),
         sendByUserID: "system",
-        sendDate: new Date().toISOString(),
         sendInRoomID: roomID || leavingRoomID,
         textMessage,
       };
@@ -82,7 +82,6 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
         id: Math.random().toString().slice(2, 20),
         sendByUserID: authCtx.userID,
         sendByUserLogo: authCtx.userLogo,
-        sendDate: new Date().toISOString(),
         sendInRoomID: roomID,
         textMessage,
       };
