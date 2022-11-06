@@ -13,7 +13,10 @@ const formStyles =
 const buttonStyles = "rounded-lg w-1/3 hover:scale-110 duration-150";
 const navLinkStyles = "text-cyan-700 hover:text-cyan-400";
 
-export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
+export const AuthForm: AuthFormFCType = ({
+  isRegistering,
+  showModalHandler,
+}) => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -29,7 +32,7 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
         repeatPasswordInputRef.current!.value !==
         passwordInputRef.current!.value
       )
-        return console.log("hasla nie sa takie same");
+        return showModalHandler("Passwords are not the same.");
 
       try {
         const res = await fetch("http://localhost:3008/api/auth/register", {
@@ -49,7 +52,9 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
         return navigate("/login");
       } catch (err) {
         console.log("nie udalo sie zarejestrowac");
-        console.log(err);
+        showModalHandler(
+          "Wrong credentials. Login must contain at least 8 characters and password contain 1 uppercase, 1 lowercase and at least one number."
+        );
       }
     } else {
       try {
@@ -78,7 +83,7 @@ export const AuthForm: AuthFormFCType = ({ isRegistering }) => {
         return navigate("/chat");
       } catch (err) {
         console.log("nie udalo sie zalogowac");
-        console.log(err);
+        showModalHandler("Wrong password or login.");
       }
     }
   };

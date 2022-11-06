@@ -13,6 +13,7 @@ export const Message: MessageFCType = ({
   message,
   sendByUserID,
   sendByUserLogo,
+  sendDate,
 }) => {
   const authCtx = useContext<AuthContextType>(AuthContext);
 
@@ -44,7 +45,8 @@ export const Message: MessageFCType = ({
           src={
             sendByUserID === authCtx.userID ? authCtx.userLogo : sendByUserLogo
           }
-          alt="Avatar..."
+          alt={sendDate}
+          title={sendDate ? new Date(sendDate).toLocaleString() : ""}
         />
       </div>
       <div

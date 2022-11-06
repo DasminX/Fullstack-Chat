@@ -3,9 +3,8 @@ import { AuthContext } from "../../../context/auth-context";
 import { AuthContextType } from "../../../types/authContextTypes";
 import { LogoNameChangeFieldFCType } from "../../../types/componentsTypes";
 import { Button } from "../../Button/Button";
+import { ProfileUILine } from "../ProfileUILine/ProfileUILine";
 
-const sectionStyles =
-  "user-info w-full h-32 rounded-t-2xl flex px-8 py-4 border-b-2 border-cyan-700";
 const logoAreaWrapperStyles =
   "user-image basis-1/4 h-full flex justify-center items-center";
 const changeNameAreaWrapperStyles =
@@ -49,7 +48,7 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
   };
 
   return (
-    <section className={sectionStyles}>
+    <ProfileUILine>
       <div className={logoAreaWrapperStyles}>
         <div className="w-20 h-20">
           <img
@@ -84,6 +83,6 @@ export const LogoNameChangeField: LogoNameChangeFieldFCType = ({
           &times;
         </Button>
       )}
-    </section>
+    </ProfileUILine>
   );
 };

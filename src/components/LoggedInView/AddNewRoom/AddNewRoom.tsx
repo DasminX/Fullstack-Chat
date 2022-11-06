@@ -29,7 +29,8 @@ const buttonWrapperStyles = "w-full basis-full flex flex-col-reverse";
 export const AddNewRoom: AddNewRoomFCType = ({
   closeAddingRoomFieldHandler,
 }) => {
-  const { socket } = useContext<AuthContextType>(AuthContext);
+  const { socket, logout } = useContext<AuthContextType>(AuthContext);
+  const chatCtx = useContext<ChatContextType>(ChatContext);
   const { switchLoader } = useContext<ChatContextType>(ChatContext);
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState<boolean>(false);
@@ -43,8 +44,12 @@ export const AddNewRoom: AddNewRoomFCType = ({
   const createRoomHandler = (e: FormEvent) => {
     e.preventDefault();
 
-    if (socket === null || !nameInputRef.current) return;
+    if (socket == null) {
+      chatCtx.reset();
+      return logout();
+    }
 
+    if (!nameInputRef.current) return;
     switchLoader(true);
 
     socket.emit("roomAdded", {

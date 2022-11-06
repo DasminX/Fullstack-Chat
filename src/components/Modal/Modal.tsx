@@ -25,6 +25,10 @@ const ModalContent: ModalMessageType = ({ message, hideModalHandler }) => {
   );
 };
 
+const ModalOverlay = () => {
+  return <div className={modalOverlayStyles}></div>;
+};
+
 export const ErrorModal: ModalMessageType = ({ message, hideModalHandler }) => {
   return (
     <>
@@ -35,8 +39,4 @@ export const ErrorModal: ModalMessageType = ({ message, hideModalHandler }) => {
       {ReactDOM.createPortal(<ModalOverlay />, portalModalOverlayDiv)}
     </>
   );
-};
-
-const ModalOverlay = () => {
-  return <div className={modalOverlayStyles}></div>;
 };

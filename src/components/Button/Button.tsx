@@ -8,12 +8,14 @@ export const Button: ButtonFCType = ({
   children,
   customClasses,
   type,
+  disabled,
 }) => {
   return (
     <button
       type={type}
       onClick={onClick}
       className={buttonStyles + (customClasses || "")}
+      disabled={disabled}
     >
       {children}
     </button>

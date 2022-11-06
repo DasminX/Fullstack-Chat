@@ -29,6 +29,7 @@ export const MessagesField = () => {
                 message={message.textMessage}
                 sendByUserID={message.sendByUserID || ""}
                 sendByUserLogo={message.sendByUserLogo}
+                sendDate={message.sendDate || ""}
               />
             );
           } else {

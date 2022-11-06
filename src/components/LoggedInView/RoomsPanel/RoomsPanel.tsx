@@ -1,4 +1,11 @@
-import { ChangeEvent, FC, useContext, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FC,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AuthContext } from "../../../context/auth-context";
 import { ChatContext } from "../../../context/chat-context";
 import { AuthContextType } from "../../../types/authContextTypes";
@@ -22,9 +29,10 @@ type RoomsPanelFCType = FC<{ showAddingRoomFieldHandler: () => void }>;
 export const RoomsPanel: RoomsPanelFCType = ({
   showAddingRoomFieldHandler,
 }) => {
-  const { socket } = useContext<AuthContextType>(AuthContext);
+  const { socket, logout } = useContext<AuthContextType>(AuthContext);
   const chatCtx = useContext<ChatContextType>(ChatContext);
   const [searchInputValue, setSearchInputValue] = useState<string>("");
+  const addRoomRef = useRef<HTMLButtonElement>(null);
 
   const filterRoomsHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchInputValue(e.currentTarget.value);
@@ -35,8 +43,10 @@ export const RoomsPanel: RoomsPanelFCType = ({
   );
 
   useEffect(() => {
-    if (socket === null)
-      return console.log("socketa nie ma cos poszlo nie tak");
+    if (socket == null) {
+      chatCtx.reset();
+      return logout();
+    }
 
     socket.on("sendingInitialRooms", (rooms: RoomDataType[]) => {
       chatCtx.updateRoomArray(rooms);
@@ -45,11 +55,13 @@ export const RoomsPanel: RoomsPanelFCType = ({
     return () => {
       socket.off("sendingInitialRooms");
     };
-  }, [socket, chatCtx]);
+  }, [socket, logout, chatCtx]);
 
   useEffect(() => {
-    if (socket === null)
-      return console.log("socketa nie ma cos poszlo nie tak");
+    if (socket == null) {
+      chatCtx.reset();
+      return logout();
+    }
 
     socket.on("sendingUpdatedRooms", (rooms: RoomDataType[]) => {
       chatCtx.updateRoomArray(rooms);
@@ -58,7 +70,7 @@ export const RoomsPanel: RoomsPanelFCType = ({
     return () => {
       socket.off("sendingUpdatedRooms");
     };
-  }, [socket, chatCtx]);
+  }, [socket, logout, chatCtx]);
 
   return (
     <section
@@ -76,8 +88,12 @@ export const RoomsPanel: RoomsPanelFCType = ({
           onChange={filterRoomsHandler}
         />
         <button
-          className={buttonAddRoomStyles}
+          ref={addRoomRef}
+          className={`${buttonAddRoomStyles} ${
+            addRoomRef.current?.disabled ? "cursor-not-allowed" : ""
+          }`}
           onClick={showAddingRoomFieldHandler}
+          disabled={chatCtx.roomID !== ""}
         >
           +
         </button>

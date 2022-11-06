@@ -1,7 +1,10 @@
 import { FC, ReactNode } from "react";
 
 // FORM
-export type AuthFormFCType = FC<{ isRegistering: boolean }>;
+export type AuthFormFCType = FC<{
+  isRegistering: boolean;
+  showModalHandler: (errMsg: string) => void;
+}>;
 
 export type AuthFormInputFCRefType = React.ForwardRefExoticComponent<
   {
@@ -22,6 +25,7 @@ export type ButtonFCType = FC<{
   children: ReactNode;
   customClasses?: string;
   type?: "submit" | "button" | "reset";
+  disabled?: boolean;
 }>;
 
 // MODAL
@@ -41,11 +45,8 @@ export type ChangeLogoFieldFCType = FC<{
   hideChangeLogoHandler: hideChangeLogoFuncType;
 }>;
 
-//REGISTER PAGE
-export type RegisterPageFCType = FC<{ isRegistering: boolean }>;
-
-// LOGIN PAGE
-export type LoginPageFCType = FC<{ isRegistering: boolean }>;
+//AUTH PAGE
+export type AuthPageFCType = FC<{ isRegistering: boolean }>;
 
 // AVATAR COMPONENT
 export type AvatarType = { avatarId: string; avatarUrl: string };
@@ -75,6 +76,7 @@ export type MessageFCType = FC<{
   message: string;
   sendByUserID: string;
   sendByUserLogo?: string;
+  sendDate?: string;
 }>;
 
 // ROOM PREVIEW
