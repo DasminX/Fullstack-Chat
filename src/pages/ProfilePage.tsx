@@ -13,7 +13,7 @@ const sectionStyles =
   "col-start-3 col-end-11 row-start-1 row-end-7 my-20 bg-slate-300 rounded-2xl xl:col-start-4 xl:col-end-10";
 
 export const ProfilePage = () => {
-  const { isAuth, setChangeLogo } = useContext(AuthContext);
+  const { isAuth, setChangeLogo, userLogo } = useContext(AuthContext);
   const [isErrorModal, setIsErrorModal] = useState<boolean>(false);
   const [isChangingLogo, setIsChangingLogo] = useState<boolean>(false);
 
@@ -31,6 +31,7 @@ export const ProfilePage = () => {
 
   const hideChangeLogoHandler: hideChangeLogoFuncType = (imageUrl) => {
     setIsChangingLogo(false);
+    if (imageUrl === userLogo) return;
     setChangeLogo(imageUrl);
   };
 
