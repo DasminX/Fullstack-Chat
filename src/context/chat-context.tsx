@@ -5,6 +5,7 @@ import {
   chatMessageType,
   RoomDataType,
 } from "../types/chatContextTypes";
+import { ChatViewDataType } from "../types/componentsTypes";
 import { AuthContext } from "./auth-context";
 
 // IDE helper function
@@ -21,6 +22,8 @@ export const ChatContext = React.createContext<ChatContextType>({
   getAllMessagesFromDB: (messages) => {},
   receiveMessage: (message, sendByUserLogo) => {},
   reset: () => {},
+  chatViewData: { name: "", id: "" },
+  updateChatViewData: (data) => {},
 });
 
 // Provider
@@ -34,6 +37,15 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
   const [chatMessages, setChatMessages] = useState<chatMessageType[]>([]);
   const [roomID, setRoomID] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [chatViewData, setChatViewData] = useState<ChatViewDataType>({
+    name: "",
+    id: "",
+  });
+
+  const updateChatViewData = (chatViewData: ChatViewDataType) => {
+    setChatViewData(chatViewData);
+  };
+
   const updateRoomArray = (roomsData: RoomDataType[]) => {
     setRooms(roomsData);
   };
@@ -61,10 +73,13 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
       chatCtx.reset();
       return authCtx.logout();
     }
-    authCtx.socket.emit("leavingRoom", {
-      roomID,
-      currentUserID: authCtx.userID,
-    });
+
+    if (roomID && authCtx.userID) {
+      authCtx.socket.emit("leavingRoom", {
+        roomID,
+        currentUserID: authCtx.userID,
+      });
+    }
     setChatMessages([]);
     setRoomID("");
   };
@@ -134,6 +149,8 @@ export const ChatContextProvider: FC<{ children: ReactNode }> = ({
         getAllMessagesFromDB,
         receiveMessage,
         reset,
+        chatViewData,
+        updateChatViewData,
       }}
     >
       {children}

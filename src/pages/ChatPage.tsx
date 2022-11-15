@@ -19,11 +19,6 @@ export const ChatPage = () => {
 
   const [roomPassword, setRoomPassword] = useState<string>("");
 
-  const [chatViewData, setChatViewData] = useState<ChatViewDataType>({
-    name: "",
-    id: "",
-  });
-
   const showAddingRoomFieldHandler = () => {
     setIsAddingNewRoom(true);
   };
@@ -43,7 +38,7 @@ export const ChatPage = () => {
       chatCtx.switchLoader(false);
       chatCtx.sendMessage(systemMsg, true);
       socket.emit("getInitialMessages", roomID);
-      setChatViewData({ name, id: roomID });
+      chatCtx.updateChatViewData({ name, id: roomID });
     });
 
     return () => {
@@ -60,7 +55,7 @@ export const ChatPage = () => {
     socket.on("leftRoom", (roomID: string, systemMsg: string) => {
       // chyba potrzebne room id
       chatCtx.sendMessage(systemMsg, true, roomID);
-      setChatViewData({ name: "", id: "" });
+      chatCtx.updateChatViewData({ name: "", id: "" });
     });
 
     return () => {
@@ -131,10 +126,13 @@ export const ChatPage = () => {
     <>
       {isAuth && <Nav />}
       <main className={mainStyle}>
-        <RoomsPanel showAddingRoomFieldHandler={showAddingRoomFieldHandler} />
+        <RoomsPanel
+          showAddingRoomFieldHandler={showAddingRoomFieldHandler}
+          isAddingNewRoom={isAddingNewRoom}
+        />
         {typeof chatCtx.roomID === "string" &&
           chatCtx.roomID.trim().length > 0 && (
-            <ChatView roomName={chatViewData.name} />
+            <ChatView roomName={chatCtx.chatViewData.name} />
           )}
         {isAddingNewRoom && (
           <AddNewRoom

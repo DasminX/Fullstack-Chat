@@ -86,6 +86,7 @@ export type RoomPreviewFCType = FC<{
   roomName: string;
   logoURL: string;
   activeInRoomNb: number;
+  isAddingNewRoom: boolean;
 }>;
 
 // CHAT UPPER BANNER

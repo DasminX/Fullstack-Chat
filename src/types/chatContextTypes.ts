@@ -1,3 +1,5 @@
+import { ChatViewDataType } from "./componentsTypes";
+
 export type chatMessageType = {
   id: string;
   sendByUserID: string;
@@ -48,4 +50,9 @@ export type ChatContextType = {
   getAllMessagesFromDB: getAllMsgFuncType;
   receiveMessage: receiveMsgFuncType;
   reset: resetFuncType;
+  chatViewData: {
+    name: string;
+    id: string;
+  };
+  updateChatViewData: (chatViewData: ChatViewDataType) => void;
 };

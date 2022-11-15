@@ -20,6 +20,7 @@ export const RoomPreview: RoomPreviewFCType = ({
   roomName,
   logoURL,
   activeInRoomNb,
+  isAddingNewRoom,
 }) => {
   const chatCtx = useContext<ChatContextType>(ChatContext);
 
@@ -43,11 +44,14 @@ export const RoomPreview: RoomPreviewFCType = ({
         <h2 className="">Aktywni: {activeInRoomNb}</h2>
         <Button
           onClick={() => roomActionHandler(roomID)}
-          customClasses={`text-black rounded-xl px-4 py-1 hover:bg-slate-500 hover:scale-110 duration-200 ${
+          customClasses={`${
+            isAddingNewRoom ? "cursor-not-allowed" : ""
+          } text-black rounded-xl px-4 py-1 hover:bg-slate-500 hover:scale-110 duration-200 ${
             roomID === chatCtx.roomID
               ? "bg-white border-2 border-slate-500 hover:bg-red-400 hover:border-transparent"
               : "bg-slate-400"
           }`}
+          disabled={isAddingNewRoom}
         >
           {roomID === chatCtx.roomID ? "Rozłącz" : "Dołącz!"}
         </Button>

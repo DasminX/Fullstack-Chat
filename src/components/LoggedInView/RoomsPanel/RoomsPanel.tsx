@@ -24,10 +24,14 @@ const buttonAddRoomStyles =
 const textNoFoundStyles = "text-center text-black mt-16";
 /* END OF STYLES */
 
-type RoomsPanelFCType = FC<{ showAddingRoomFieldHandler: () => void }>;
+type RoomsPanelFCType = FC<{
+  showAddingRoomFieldHandler: () => void;
+  isAddingNewRoom: boolean;
+}>;
 
 export const RoomsPanel: RoomsPanelFCType = ({
   showAddingRoomFieldHandler,
+  isAddingNewRoom,
 }) => {
   const { socket, logout } = useContext<AuthContextType>(AuthContext);
   const chatCtx = useContext<ChatContextType>(ChatContext);
@@ -106,6 +110,7 @@ export const RoomsPanel: RoomsPanelFCType = ({
             roomName={room.name}
             logoURL={room.logoURL}
             activeInRoomNb={room.activeInRoom}
+            isAddingNewRoom={isAddingNewRoom}
           />
         ))}
       {filteredRoomData.length === 0 && (

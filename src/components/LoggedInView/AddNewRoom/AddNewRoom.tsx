@@ -53,7 +53,9 @@ export const AddNewRoom: AddNewRoomFCType = ({
     switchLoader(true);
 
     socket.emit("roomAdded", {
-      name: nameInputRef.current.value,
+      name:
+        nameInputRef.current.value ||
+        `Room ${Math.random().toString().slice(2, 10)}`,
       logoURL:
         URLInputRef.current?.value ||
         "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png",
